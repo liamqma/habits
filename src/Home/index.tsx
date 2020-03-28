@@ -100,41 +100,45 @@ function Home({ items, add, remove, done }: Props): JSX.Element {
     return (
         <>
             <Add add={add} />
-            <List>
-                {items.map((item: Item) => (
-                    <li key={item.name}>
-                        <NameButton
-                            disabled={isDoneToday(item)}
-                            onClick={(): void => done(item.name)}
-                        >
-                            {item.name}
-                        </NameButton>
-                        <RemoveButton
-                            onClick={(): void => confirmRemove(item.name)}
-                        >
-                            x
-                        </RemoveButton>
-                    </li>
-                ))}
-            </List>
-            <Table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Total days:</th>
-                        <th>Consecutive days:</th>
-                    </tr>
-                </thead>
-                <tbody>
+            {items.length ? (
+                <List>
                     {items.map((item: Item) => (
-                        <tr key={item.name}>
-                            <td>{item.name}</td>
-                            <td>{item.doneDates.length}</td>
-                            <td>?</td>
-                        </tr>
+                        <li key={item.name}>
+                            <NameButton
+                                disabled={isDoneToday(item)}
+                                onClick={(): void => done(item.name)}
+                            >
+                                {item.name}
+                            </NameButton>
+                            <RemoveButton
+                                onClick={(): void => confirmRemove(item.name)}
+                            >
+                                x
+                            </RemoveButton>
+                        </li>
                     ))}
-                </tbody>
-            </Table>
+                </List>
+            ) : null}
+            {items.length ? (
+                <Table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Total days:</th>
+                            <th>Consecutive days:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items.map((item: Item) => (
+                            <tr key={item.name}>
+                                <td>{item.name}</td>
+                                <td>{item.doneDates.length}</td>
+                                <td>?</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            ) : null}
         </>
     );
 }
