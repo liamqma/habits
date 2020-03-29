@@ -16,7 +16,7 @@ const Input = styled.input`
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    padding: 16px 16px 16px 30px;
+    padding: 15px 15px 15px 50px;
     border: none;
     background: rgba(0, 0, 0, 0.003);
     box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
@@ -36,6 +36,7 @@ function Add({ add }: Props): JSX.Element {
     const [name, setName] = useState("");
 
     const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>): void => {
+        setName("");
         add(name);
         event.preventDefault();
     };
