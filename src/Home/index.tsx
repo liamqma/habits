@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Add from "../Add/index";
 import { Item } from "../types";
-import isToday from "../util/isToday";
+import isToday from "../utils/isToday";
 
 const List = styled.ul`
     margin: 0;
@@ -25,11 +25,11 @@ const NameButton = styled.button`
     background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23ededed%22%20stroke-width%3D%223%22/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center left;
+`;
 
-    :disabled {
-        text-decoration: line-through;
-        background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E");
-    }
+const DoneNameButton = styled(NameButton)`
+    text-decoration: line-through;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E");
 `;
 
 const RemoveButton = styled.button`
@@ -85,6 +85,7 @@ interface Props {
     add: Function;
     remove: Function;
     done: Function;
+    unDone: Function;
 }
 
 function isDoneToday(item: Item): boolean {
@@ -94,10 +95,10 @@ function isDoneToday(item: Item): boolean {
     return false;
 }
 
-function Home({ items, add, remove, done }: Props): JSX.Element {
-    function confirmRemove(name: string): void {
+function Home({ items, add, remove, done, unDone }: Props): JSX.Element {
+    function confirmRemove(id: string): void {
         if (window.confirm("Do you really want to delete permanently?")) {
-            remove(name);
+            remove(id);
         }
     }
 
@@ -107,15 +108,20 @@ function Home({ items, add, remove, done }: Props): JSX.Element {
             {items.length ? (
                 <List>
                     {items.map((item: Item) => (
-                        <li key={item.name}>
-                            <NameButton
-                                disabled={isDoneToday(item)}
-                                onClick={(): void => done(item.name)}
-                            >
-                                {item.name}
-                            </NameButton>
+                        <li key={item.id}>
+                            {isDoneToday(item) ? (
+                                <DoneNameButton
+                                    onClick={(): void => unDone(item.id)}
+                                >
+                                    {item.name}
+                                </DoneNameButton>
+                            ) : (
+                                <NameButton onClick={(): void => done(item.id)}>
+                                    {item.name}
+                                </NameButton>
+                            )}
                             <RemoveButton
-                                onClick={(): void => confirmRemove(item.name)}
+                                onClick={(): void => confirmRemove(item.id)}
                             >
                                 x
                             </RemoveButton>
@@ -134,7 +140,7 @@ function Home({ items, add, remove, done }: Props): JSX.Element {
                     </thead>
                     <tbody>
                         {items.map((item: Item) => (
-                            <tr key={item.name}>
+                            <tr key={item.id}>
                                 <td>{item.name}</td>
                                 <td>{item.doneDates.length}</td>
                                 <td>?</td>

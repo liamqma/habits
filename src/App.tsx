@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { useCookie } from "@use-hook/use-cookie";
+import Cookies from "js-cookie";
 import { Item } from "./types";
 import Home from "./Home/index";
 import Add from "./Add/index";
-import isToday from "./util/isToday";
+import isToday from "./utils/isToday";
+import createId from "./utils/createId";
 import styled, { createGlobalStyle } from "styled-components";
+
+const COOKIE_NAME = "DATA";
 
 const GlobalStyle = createGlobalStyle`
     html,
@@ -69,42 +72,80 @@ const Page = styled.section`
 `;
 
 function App(): JSX.Element {
-    const [data, setData] = useCookie("items", JSON.stringify([]));
+    const [items, setItems] = useState<Array<Item>>([]);
 
-    let items: Array<Item>;
-    try {
-        items = JSON.parse(data);
-    } catch (error) {
-        items = [];
-    }
+    useEffect(() => {
+        // get items from Cookie
+        const dataFromCookie = Cookies.get(COOKIE_NAME);
+        if (dataFromCookie) {
+            let data;
+            try {
+                data = JSON.parse(dataFromCookie);
+            } catch (error) {
+                // fail siently 🤫
+            }
+            if (Array.isArray(data) && data.length) {
+                setItems(data);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        Cookies.set(COOKIE_NAME, JSON.stringify(items), { expires: 365 });
+    }, [items]);
 
     function add(name: string): void {
-        items.push({ name, doneDates: [] });
-        setData(JSON.stringify(items), { expires: 365 });
+        if (name) {
+            setItems([
+                ...items,
+                {
+                    id: createId(),
+                    name,
+                    doneDates: [],
+                },
+            ]);
+        }
     }
 
-    function remove(name: string): void {
-        items = items.filter((item) => item.name !== name);
-        setData(JSON.stringify(items), { expires: 365 });
+    function remove(id: string): void {
+        setItems(items.filter((item) => item.id !== id));
     }
 
-    function done(name: string): void {
-        items = items.map((item) => {
-            if (item.name === name) {
-                if (item?.doneDates.length === 0) {
-                    item.doneDates.push(new Date().toString());
-                } else if (
-                    !isToday(
-                        new Date(item.doneDates[item.doneDates.length - 1])
-                    )
-                ) {
-                    item.doneDates.push(new Date().toString());
+    function done(id: string): void {
+        setItems(
+            items.map((item) => {
+                if (item.id === id) {
+                    if (item?.doneDates.length === 0) {
+                        item.doneDates.push(new Date().toString());
+                    } else if (
+                        !isToday(
+                            new Date(item.doneDates[item.doneDates.length - 1])
+                        )
+                    ) {
+                        item.doneDates.push(new Date().toString());
+                    }
                 }
-            }
-            return item;
-        });
+                return item;
+            })
+        );
+    }
 
-        setData(JSON.stringify(items), { expires: 365 });
+    function unDone(id: string): void {
+        setItems(
+            items.map((item) => {
+                if (item.id === id) {
+                    if (
+                        item?.doneDates.length !== 0 &&
+                        isToday(
+                            new Date(item.doneDates[item.doneDates.length - 1])
+                        )
+                    ) {
+                        item.doneDates.pop();
+                    }
+                }
+                return item;
+            })
+        );
     }
 
     return (
@@ -122,6 +163,7 @@ function App(): JSX.Element {
                                 add={add}
                                 remove={remove}
                                 done={done}
+                                unDone={unDone}
                             />
                         </Route>
                     </Switch>
