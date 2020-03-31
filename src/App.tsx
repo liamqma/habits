@@ -5,7 +5,7 @@ import { Item } from "./types";
 import Home from "./Home/index";
 import Add from "./Add/index";
 import isToday from "./utils/isToday";
-import createId from "./utils/createId";
+import { add as addItem, remove as removeItem } from "./utils/item";
 import styled, { createGlobalStyle } from "styled-components";
 
 const COOKIE_NAME = "DATA";
@@ -95,20 +95,11 @@ function App(): JSX.Element {
     }, [items]);
 
     function add(name: string): void {
-        if (name) {
-            setItems([
-                ...items,
-                {
-                    id: createId(),
-                    name,
-                    doneDates: [],
-                },
-            ]);
-        }
+        setItems(addItem(items, name));
     }
 
     function remove(id: string): void {
-        setItems(items.filter((item) => item.id !== id));
+        setItems(removeItem(items, id));
     }
 
     function done(id: string): void {
