@@ -4,8 +4,12 @@ import Cookies from "js-cookie";
 import { Item } from "./types";
 import Home from "./Home/index";
 import Add from "./Add/index";
-import isToday from "./utils/isToday";
-import { add as addItem, remove as removeItem } from "./utils/item";
+import {
+    add as addItem,
+    remove as removeItem,
+    done as doneItems,
+    unDone as unDoneItems,
+} from "./utils/item";
 import styled, { createGlobalStyle } from "styled-components";
 
 const COOKIE_NAME = "DATA";
@@ -27,10 +31,7 @@ const GlobalStyle = createGlobalStyle`
         font-family: inherit;
         font-weight: inherit;
         color: inherit;
-        -webkit-appearance: none;
         appearance: none;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
     }
 
     body {
@@ -48,10 +49,6 @@ const GlobalStyle = createGlobalStyle`
 
     :focus {
         outline: 0;
-    }
-
-    .hidden {
-        display: none;
     }
 `;
 
@@ -103,40 +100,11 @@ function App(): JSX.Element {
     }
 
     function done(id: string): void {
-        setItems(
-            items.map((item) => {
-                if (item.id === id) {
-                    if (item?.doneDates.length === 0) {
-                        item.doneDates.push(new Date().toString());
-                    } else if (
-                        !isToday(
-                            new Date(item.doneDates[item.doneDates.length - 1])
-                        )
-                    ) {
-                        item.doneDates.push(new Date().toString());
-                    }
-                }
-                return item;
-            })
-        );
+        setItems(doneItems(items, id));
     }
 
     function unDone(id: string): void {
-        setItems(
-            items.map((item) => {
-                if (item.id === id) {
-                    if (
-                        item?.doneDates.length !== 0 &&
-                        isToday(
-                            new Date(item.doneDates[item.doneDates.length - 1])
-                        )
-                    ) {
-                        item.doneDates.pop();
-                    }
-                }
-                return item;
-            })
-        );
+        setItems(unDoneItems(items, id));
     }
 
     return (
