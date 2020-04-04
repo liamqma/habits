@@ -5,7 +5,13 @@ const getItemName = (): string =>
     `${faker.hacker.verb()} ${faker.hacker.noun()}`;
 const getId = faker.random.uuid;
 
-export function buildItem(overrides?: object): Item {
+export interface Overrides {
+    id?: string;
+    name?: string;
+    doneDates?: Date[];
+}
+
+export function buildItem(overrides?: Overrides): Item {
     return {
         id: getId(),
         name: getItemName(),

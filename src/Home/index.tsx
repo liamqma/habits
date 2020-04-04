@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import Add from "../Add/index";
 import List from "../List/index";
 import Summary from "../Summary/index";

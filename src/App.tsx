@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Cookies from "js-cookie";
+import styled, { createGlobalStyle } from "styled-components";
 import { Item } from "./types";
 import Home from "./Home/index";
 import Add from "./Add/index";
@@ -10,9 +10,7 @@ import {
     done as doneItems,
     unDone as unDoneItems,
 } from "./utils/item";
-import styled, { createGlobalStyle } from "styled-components";
-
-const COOKIE_NAME = "DATA";
+import { getItems, saveItems } from "./utils/db";
 
 const GlobalStyle = createGlobalStyle`
     html,
@@ -72,23 +70,11 @@ function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);
 
     useEffect(() => {
-        // get items from Cookie
-        const dataFromCookie = Cookies.get(COOKIE_NAME);
-        if (dataFromCookie) {
-            let data;
-            try {
-                data = JSON.parse(dataFromCookie);
-            } catch (error) {
-                // fail siently 🤫
-            }
-            if (Array.isArray(data) && data.length) {
-                setItems(data);
-            }
-        }
+        setItems(getItems());
     }, []);
 
     useEffect(() => {
-        Cookies.set(COOKIE_NAME, JSON.stringify(items), { expires: 365 });
+        saveItems(items);
     }, [items]);
 
     function add(name: string): void {
