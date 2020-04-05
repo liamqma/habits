@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const Input = styled.input`
+export const Input = styled.input`
     width: 100%;
     font-size: 24px;
     font-family: inherit;

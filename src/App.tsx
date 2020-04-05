@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import { Item } from "./types";
 import Home from "./Home/index";
 import Add from "./Add/index";
+import Edit from "./Edit/index";
 import {
     add as addItem,
+    update as updateItem,
     remove as removeItem,
     done as doneItems,
     unDone as unDoneItems,
@@ -50,6 +52,10 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
+const LogoLink = styled(Link)`
+    text-decoration: none;
+`;
+
 const H1 = styled.h1`
     width: 100%;
     font-size: 100px;
@@ -81,6 +87,10 @@ function App(): JSX.Element {
         setItems(addItem(items, name));
     }
 
+    function edit(id: string, name: string): void {
+        setItems(updateItem(items, id, name));
+    }
+
     function remove(id: string): void {
         setItems(removeItem(items, id));
     }
@@ -96,17 +106,21 @@ function App(): JSX.Element {
     return (
         <Router>
             <>
-                <H1>Habits</H1>
+                <LogoLink to="/">
+                    <H1>Habits</H1>
+                </LogoLink>
                 <Page>
                     <Switch>
                         <Route path="/add">
                             <Add add={add} />
                         </Route>
+                        <Route path="/edit/:id">
+                            <Edit edit={edit} remove={remove} items={items} />
+                        </Route>
                         <Route path="/">
                             <Home
                                 items={items}
                                 add={add}
-                                remove={remove}
                                 done={done}
                                 unDone={unDone}
                             />

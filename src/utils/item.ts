@@ -20,6 +20,25 @@ export function remove(items: Array<Item>, id: string): Array<Item> {
     return items.filter((item) => item.id !== id);
 }
 
+export function update(
+    items: Array<Item>,
+    id: string,
+    name: string
+): Array<Item> {
+    if (id && name) {
+        return [...items].map((item) => {
+            if (item.id === id) {
+                return {
+                    ...item,
+                    name,
+                };
+            }
+            return item;
+        });
+    }
+    return items;
+}
+
 export function done(items: Array<Item>, id: string): Array<Item> {
     return items.map((item) => {
         if (item.id === id) {

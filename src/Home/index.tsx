@@ -7,16 +7,15 @@ import { Item } from "../types";
 interface Props {
     items: Array<Item>;
     add: Function;
-    remove: Function;
     done: Function;
     unDone: Function;
 }
 
-function Home({ items, add, remove, done, unDone }: Props): JSX.Element {
+function Home({ items, add, done, unDone }: Props): JSX.Element {
     return (
         <>
             <Add add={add} />
-            <List items={items} remove={remove} done={done} unDone={unDone} />
+            <List items={items} done={done} unDone={unDone} />
             <Summary items={items} />
         </>
     );

@@ -1,4 +1,4 @@
-import { add, remove, done, unDone } from "./item";
+import { add, update, remove, done, unDone } from "./item";
 import { buildItem } from "../../test/utils/generate";
 
 describe("test addItem", () => {
@@ -10,6 +10,20 @@ describe("test addItem", () => {
     test("add new item", () => {
         const items = [buildItem(), buildItem()];
         expect(add(items, "eat breakfast").length).toBe(3);
+    });
+});
+
+describe("test updateItem", () => {
+    test("should update item", () => {
+        const items = [buildItem(), buildItem()];
+        expect(update(items, items[0].id, "Watch movie")[0].name).toBe(
+            "Watch movie"
+        );
+    });
+
+    test("should do nothing if id is not found", () => {
+        const items = [buildItem(), buildItem()];
+        expect(update(items, "foo-bar", "Watch movie")).toEqual(items);
     });
 });
 

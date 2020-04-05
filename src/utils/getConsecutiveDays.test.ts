@@ -8,7 +8,7 @@ test("should return 1 if only one doneDate", () => {
     expect(getConsecutiveDays([new Date()])).toBe(1);
 });
 
-test("get consecutive days if input dates are consecutive", () => {
+test("get 4 consecutive days if input dates are consecutive", () => {
     const today = new Date();
     const todayMinusOne = new Date();
     const todayMinusTwo = new Date();
@@ -21,7 +21,7 @@ test("get consecutive days if input dates are consecutive", () => {
     expect(getConsecutiveDays(doneDates)).toBe(4);
 });
 
-test("get consecutive days correctly if there is a break", () => {
+test("get 2 consecutive days correctly if there is a break", () => {
     const today = new Date();
     const todayMinusOne = new Date();
     const todayMinusThree = new Date();
@@ -32,7 +32,7 @@ test("get consecutive days correctly if there is a break", () => {
     expect(getConsecutiveDays(doneDates)).toBe(2);
 });
 
-test("get consecutive days correctly if consecutive two days", () => {
+test("get 2 consecutive days correctly if consecutive two days", () => {
     const today = new Date();
     const todayMinusOne = new Date();
     todayMinusOne.setDate(today.getDate() - 1);
@@ -41,11 +41,22 @@ test("get consecutive days correctly if consecutive two days", () => {
     expect(getConsecutiveDays(doneDates)).toBe(2);
 });
 
-test("get consecutive days correctly if two days and a break", () => {
+test("get 1 consecutive day if two days and a break", () => {
     const today = new Date();
     const todayMinusTwo = new Date();
     todayMinusTwo.setDate(today.getDate() - 2);
     const doneDates = [todayMinusTwo, today];
+
+    expect(getConsecutiveDays(doneDates)).toBe(1);
+});
+
+test("get 1 consecutive day correctly if there is no yesterday", () => {
+    const today = new Date();
+    const todayMinusTwo = new Date();
+    const todayMinusThree = new Date();
+    todayMinusTwo.setDate(today.getDate() - 2);
+    todayMinusThree.setDate(today.getDate() - 3);
+    const doneDates = [todayMinusThree, todayMinusTwo, today];
 
     expect(getConsecutiveDays(doneDates)).toBe(1);
 });
