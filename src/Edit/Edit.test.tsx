@@ -2,6 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import Edit from "./index";
 import { buildItem } from "../../test/utils/generate";
+import window from "global/window";
 
 jest.mock("react-router-dom", () => ({
     useParams: (): object => ({
@@ -9,7 +10,15 @@ jest.mock("react-router-dom", () => ({
     }),
 }));
 
-window.alert = jest.fn();
+jest.mock("global/window", () => ({
+    alert: jest.fn(),
+    confirm: jest.fn(),
+}));
+
+afterEach(() => {
+    (window.confirm as jest.Mock).mockReset();
+    (window.alert as jest.Mock).mockReset();
+});
 
 test("should render 404 if habit is not found", () => {
     const { getByText } = render(
@@ -50,7 +59,18 @@ test("should call edit() upon submitting", () => {
     expect(window.alert).toBeCalledTimes(1);
 });
 
-// test("should not call edit() if name doesn't change", () => {});
+test("should not call edit() if name doesn't change", () => {
+    const edit = jest.fn();
+    const item = buildItem({ id: "foo" });
+
+    const { getByTestId } = render(
+        <Edit items={[item]} edit={edit} remove={jest.fn} />
+    );
+
+    fireEvent.submit(getByTestId("form"));
+    expect(edit).not.toBeCalled();
+    expect(window.alert).not.toBeCalled();
+});
 
 test("should change Input value during typing", () => {
     const item = buildItem({ id: "foo" });
@@ -68,4 +88,18 @@ test("should change Input value during typing", () => {
     expect(input.value).toEqual("Watch movie");
 });
 
-// test("should remove if clicking upon remove button and confirm", () => {});
+test("should remove if clicking upon remove button and confirm", () => {
+    const remove = jest.fn();
+    const item = buildItem({ id: "foo" });
+    (window.confirm as jest.Mock).mockReturnValueOnce(true);
+
+    const { getByTestId } = render(
+        <Edit items={[item]} edit={jest.fn} remove={remove} />
+    );
+
+    const button = getByTestId("remove");
+    fireEvent.click(button);
+
+    expect(remove).toBeCalledWith(item.id);
+    expect(remove).toBeCalledTimes(1);
+});

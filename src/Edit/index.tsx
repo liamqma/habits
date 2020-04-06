@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { MdDeleteForever } from "react-icons/md";
+import window from "global/window";
 import { Input } from "../Add/index";
 import { Item } from "../types";
 
@@ -36,7 +37,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
     }, [item]);
 
     const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>): void => {
-        if (item && name) {
+        if (item && name && item.name !== name) {
             edit(item.id, name);
             window.alert("The name has been updated.");
         }
@@ -66,7 +67,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
                     aria-label="Habbit name"
                 />
             </form>
-            <RemoveButton onClick={confirmRemove}>
+            <RemoveButton onClick={confirmRemove} data-testid="remove">
                 <MdDeleteForever />
             </RemoveButton>
         </>

@@ -5,7 +5,6 @@ import List from "./index";
 import { buildItem } from "../../test/utils/generate";
 import isDoneToday from "../utils/isDoneToday";
 
-const remove = jest.fn();
 const done = jest.fn();
 const unDone = jest.fn();
 jest.mock("../utils/isDoneToday");
