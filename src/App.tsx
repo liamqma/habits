@@ -5,6 +5,7 @@ import { Item } from "./types";
 import Home from "./Home/index";
 import Add from "./Add/index";
 import Edit from "./Edit/index";
+import Login from "./Login/index";
 import {
     add as addItem,
     update as updateItem,
@@ -116,6 +117,9 @@ function App(): JSX.Element {
                         </Route>
                         <Route path="/edit/:id">
                             <Edit edit={edit} remove={remove} items={items} />
+                        </Route>
+                        <Route path="/login">
+                            <Login />
                         </Route>
                         <Route path="/">
                             <Home

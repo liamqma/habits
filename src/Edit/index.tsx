@@ -54,7 +54,15 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
         setName(event.target.value);
     };
 
-    if (!item) return <NotFoundWrapper>Habit is not found. 🤷‍♀️</NotFoundWrapper>;
+    if (!item)
+        return (
+            <NotFoundWrapper>
+                Habit is not found.{" "}
+                <span role="img" aria-label="shrug">
+                    🤷‍♀️
+                </span>
+            </NotFoundWrapper>
+        );
 
     return (
         <>

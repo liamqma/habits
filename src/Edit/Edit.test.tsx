@@ -24,7 +24,7 @@ test("should render 404 if habit is not found", () => {
     const { getByText } = render(
         <Edit items={[]} edit={jest.fn} remove={jest.fn} />
     );
-    getByText("Habit is not found. 🤷‍♀️");
+    getByText("Habit is not found.");
 });
 
 test("should render name when name is available", () => {

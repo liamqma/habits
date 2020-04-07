@@ -2,16 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import firebaseConfig from "./config.json";
-
-// Firebase App (the core Firebase SDK) is always required and must be listed first
-import * as firebase from "firebase/app";
-
-// If you enabled Analytics in your project, add the Firebase SDK for Analytics
-import "firebase/analytics";
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
     <React.StrictMode>
