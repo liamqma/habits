@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { MdDeleteForever } from "react-icons/md";
 import window from "global/window";
@@ -29,6 +29,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
     const { id } = useParams();
     const item = items.find((item) => item.id === id);
     const [name, setName] = useState("");
+    const history = useHistory();
 
     useEffect(() => {
         if (item) {
@@ -47,6 +48,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
     function confirmRemove(): void {
         if (window.confirm("Do you really want to delete permanently?")) {
             remove(id);
+            history.push("/");
         }
     }
 

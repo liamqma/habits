@@ -1,14 +1,25 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
+import window from "global/window";
 import Edit from "./index";
 import { buildItem } from "../../test/utils/generate";
-import window from "global/window";
 
-jest.mock("react-router-dom", () => ({
-    useParams: (): object => ({
-        id: "foo",
-    }),
-}));
+const mockHistoryPush = jest.fn();
+
+jest.mock("react-router-dom", () => {
+    const originalModule = jest.requireActual("react-router-dom");
+
+    return {
+        __esModule: true,
+        ...originalModule,
+        useParams: (): object => ({
+            id: "foo",
+        }),
+        useHistory: (): object => ({
+            push: mockHistoryPush,
+        }),
+    };
+});
 
 jest.mock("global/window", () => ({
     alert: jest.fn(),
@@ -102,4 +113,19 @@ test("should remove if clicking upon remove button and confirm", () => {
 
     expect(remove).toBeCalledWith(item.id);
     expect(remove).toBeCalledTimes(1);
+});
+
+test("should redirect to homepage after remove", () => {
+    const item = buildItem({ id: "foo" });
+
+    (window.confirm as jest.Mock).mockReturnValueOnce(true);
+
+    const { getByTestId } = render(
+        <Edit items={[item]} edit={jest.fn} remove={jest.fn} />
+    );
+
+    const button = getByTestId("remove");
+    fireEvent.click(button);
+
+    expect(mockHistoryPush).toBeCalledWith("/");
 });
