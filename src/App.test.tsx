@@ -4,6 +4,15 @@ import { render } from "@testing-library/react";
 import App from "./App";
 
 jest.mock("js-cookie");
+jest.mock("./utils/firebase", () => {
+    const mockedAuth = (): object => ({
+        onAuthStateChanged: jest.fn(),
+    });
+    mockedAuth.GoogleAuthProvider = jest.fn();
+    return {
+        auth: mockedAuth,
+    };
+});
 
 test("renders Items from Cookie", () => {
     (Cookie.get as jest.Mock).mockReturnValueOnce(

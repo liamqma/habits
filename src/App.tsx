@@ -6,6 +6,8 @@ import Home from "./Home/index";
 import Add from "./Add/index";
 import Edit from "./Edit/index";
 import Login from "./Login/index";
+import firebase from "./utils/firebase";
+import { User } from "firebase";
 import {
     add as addItem,
     update as updateItem,
@@ -75,9 +77,20 @@ const Page = styled.section`
 
 function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         setItems(getItems());
+    }, []);
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                setUser(user);
+            } else {
+                setUser(null);
+            }
+        });
     }, []);
 
     useEffect(() => {
@@ -110,6 +123,11 @@ function App(): JSX.Element {
                 <LogoLink to="/">
                     <H1>Habits</H1>
                 </LogoLink>
+                {user ? (
+                    <span>{user.displayName}</span>
+                ) : (
+                    <Link to="/login">Login</Link>
+                )}
                 <Page>
                     <Switch>
                         <Route path="/add">
