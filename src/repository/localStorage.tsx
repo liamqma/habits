@@ -1,14 +1,14 @@
-import Cookies from "js-cookie";
 import { Item } from "../types";
+import window from "global/window";
 
-const COOKIE_NAME = "DATA";
+const DATABASE_NAME = "habits_database";
 
 export function getItems(): Array<Item> {
-    const dataFromCookie = Cookies.get(COOKIE_NAME);
-    if (dataFromCookie) {
+    const dataFromDatabase = window.localStorage.getItem(DATABASE_NAME);
+    if (dataFromDatabase) {
         let data;
         try {
-            data = JSON.parse(dataFromCookie);
+            data = JSON.parse(dataFromDatabase);
         } catch (error) {
             // fail siently 🤫
         }
@@ -33,5 +33,5 @@ export function saveItems(items: Array<Item>): void {
             doneDates: item.doneDates.map((doneDate) => doneDate.toString()),
         };
     });
-    Cookies.set(COOKIE_NAME, JSON.stringify(data), { expires: 365 });
+    window.localStorage.setItem(DATABASE_NAME, JSON.stringify(data));
 }

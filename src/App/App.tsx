@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
-import { Item } from "./types";
-import Home from "./Home/index";
-import Add from "./Add/index";
-import Edit from "./Edit/index";
-import Login from "./Login/index";
+import { Item } from "../types";
+import Home from "../Home/index";
+import Add from "../Add/index";
+import Edit from "../Edit/index";
+import Login from "../Login/index";
 import {
     add as addItem,
     update as updateItem,
     remove as removeItem,
     done as doneItems,
     unDone as unDoneItems,
-} from "./utils/item";
-import { getItems, saveItems } from "./utils/db";
+} from "../utils/item";
+import { getItems, saveItems } from "../repository/localStorage";
 
 const GlobalStyle = createGlobalStyle`
     html,
