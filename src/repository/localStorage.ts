@@ -1,4 +1,4 @@
-import { Item } from "../types";
+import { Item, DBItem } from "../types";
 import window from "global/window";
 
 const DATABASE_NAME = "habits_database";
@@ -13,14 +13,16 @@ export function getItems(): Array<Item> {
             // fail siently 🤫
         }
         if (Array.isArray(data) && data.length) {
-            return data.map((item) => {
-                return {
-                    ...item,
-                    doneDates: item.doneDates.map(
-                        (doneDate: string) => new Date(doneDate)
-                    ),
-                };
-            });
+            return data.map(
+                (item: DBItem): Item => {
+                    return {
+                        ...item,
+                        doneDates: item.doneDates.map(
+                            (doneDate: string) => new Date(doneDate)
+                        ),
+                    };
+                }
+            );
         }
     }
     return [];

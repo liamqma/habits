@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import styled, { createGlobalStyle } from "styled-components";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { User } from "firebase";
 import firebase from "../utils/firebase";
 import { Item } from "../types";
@@ -8,6 +7,7 @@ import Home from "../Home/index";
 import Add from "../Add/index";
 import Edit from "../Edit/index";
 import Login from "../Login/index";
+import { GlobalStyle, LogoLink, H1, Page, UserLink } from "./App.styles";
 import {
     add as addItem,
     update as updateItem,
@@ -15,73 +15,19 @@ import {
     done as doneItems,
     unDone as unDoneItems,
 } from "../utils/item";
-import { getItems, saveItems } from "../repository/localStorage";
-
-const GlobalStyle = createGlobalStyle`
-    html,
-    body {
-        margin: 0;
-        padding: 0;
-    }
-
-    button {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        background: none;
-        font-size: 100%;
-        vertical-align: baseline;
-        font-family: inherit;
-        font-weight: inherit;
-        color: inherit;
-        appearance: none;
-    }
-
-    body {
-        font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
-        line-height: 1.4em;
-        background: #f5f5f5;
-        color: #4d4d4d;
-        min-width: 230px;
-        max-width: 550px;
-        margin: 0 auto;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        font-weight: 300;
-    }
-
-    :focus {
-        outline: 0;
-    }
-`;
-
-const LogoLink = styled(Link)`
-    text-decoration: none;
-`;
-
-const H1 = styled.h1`
-    width: 100%;
-    font-size: 100px;
-    font-weight: 100;
-    text-align: center;
-    color: rgba(175, 47, 47, 0.15);
-    text-rendering: optimizeLegibility;
-`;
-
-const Page = styled.section`
-    background: #fff;
-    margin: 0 0 40px 0;
-    position: relative;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
-`;
+import { getItems, saveItems } from "../repository/firebase";
 
 function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        setItems(getItems());
-    }, []);
+        if (user) {
+            getItems(user.uid).then((items): void => {
+                setItems(items);
+            });
+        }
+    }, [user]);
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(function (user) {
@@ -94,7 +40,10 @@ function App(): JSX.Element {
     }, []);
 
     useEffect(() => {
-        saveItems(items);
+        if (user?.uid) {
+            saveItems(user.uid, items);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
 
     function add(name: string): void {
@@ -117,6 +66,11 @@ function App(): JSX.Element {
         setItems(unDoneItems(items, id));
     }
 
+    function logout(event: React.MouseEvent): void {
+        event.preventDefault();
+        firebase.auth().signOut();
+    }
+
     return (
         <Router>
             <>
@@ -124,9 +78,11 @@ function App(): JSX.Element {
                     <H1>Habits</H1>
                 </LogoLink>
                 {user ? (
-                    <span>{user.displayName}</span>
+                    <UserLink to="/" onClick={logout}>
+                        Logout
+                    </UserLink>
                 ) : (
-                    <Link to="/login">Login</Link>
+                    <UserLink to="/login">Login</UserLink>
                 )}
                 <Page>
                     <Switch>

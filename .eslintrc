@@ -1,26 +1,27 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2019,
-    "ecmaFeatures": {
-      "jsx": true
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2019,
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "project": "./tsconfig.json"
     },
-    "project": "./tsconfig.json"
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "eslint-config-prettier",
-    "eslint-config-prettier/@typescript-eslint",
-    "plugin:react/recommended"
-  ],
-  "env": {
-    "browser": true
-  },
-  "settings": {
-    "react": {
-      "version": "detect" // React version. "detect" automatically picks the version you have installed.
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "eslint-config-prettier",
+        "eslint-config-prettier/@typescript-eslint",
+        "plugin:react/recommended"
+    ],
+    "plugins": ["react-hooks"],
+    "env": {
+        "browser": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect" // React version. "detect" automatically picks the version you have installed.
+        }
     }
-  }
 }
