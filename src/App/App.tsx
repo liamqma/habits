@@ -7,7 +7,8 @@ import Home from "../Home/index";
 import Add from "../Add/index";
 import Edit from "../Edit/index";
 import Login from "../Login/index";
-import { GlobalStyle, LogoLink, H1, Page, UserLink } from "./App.styles";
+import UserButton from "../UserButton/index";
+import { GlobalStyle, LogoLink, H1, Page } from "./App.styles";
 import {
     add as addItem,
     update as updateItem,
@@ -19,7 +20,7 @@ import { getItems, saveItems } from "../repository/firebase";
 
 function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | undefined>(undefined);
 
     useEffect(() => {
         if (user) {
@@ -34,7 +35,7 @@ function App(): JSX.Element {
             if (user) {
                 setUser(user);
             } else {
-                setUser(null);
+                setUser(undefined);
             }
         });
     }, []);
@@ -66,24 +67,13 @@ function App(): JSX.Element {
         setItems(unDoneItems(items, id));
     }
 
-    function logout(event: React.MouseEvent): void {
-        event.preventDefault();
-        firebase.auth().signOut();
-    }
-
     return (
         <Router>
             <>
                 <LogoLink to="/">
                     <H1>Habits</H1>
                 </LogoLink>
-                {user ? (
-                    <UserLink to="/" onClick={logout}>
-                        Logout
-                    </UserLink>
-                ) : (
-                    <UserLink to="/login">Login</UserLink>
-                )}
+                <UserButton user={user} />
                 <Page>
                     <Switch>
                         <Route path="/add">
@@ -93,10 +83,11 @@ function App(): JSX.Element {
                             <Edit edit={edit} remove={remove} items={items} />
                         </Route>
                         <Route path="/login">
-                            <Login />
+                            <Login user={user} />
                         </Route>
                         <Route path="/">
                             <Home
+                                user={user}
                                 items={items}
                                 add={add}
                                 done={done}

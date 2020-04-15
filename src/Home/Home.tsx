@@ -1,4 +1,6 @@
 import React from "react";
+import { User } from "firebase";
+import { Redirect } from "react-router-dom";
 import Add from "../Add/index";
 import List from "../List/index";
 import Summary from "../Summary/index";
@@ -9,15 +11,18 @@ interface Props {
     add: Function;
     done: Function;
     unDone: Function;
+    user?: User;
 }
 
-function Home({ items, add, done, unDone }: Props): JSX.Element {
-    return (
+function Home({ user, items, add, done, unDone }: Props): JSX.Element {
+    return user ? (
         <>
             <Add add={add} />
             <List items={items} done={done} unDone={unDone} />
             <Summary items={items} />
         </>
+    ) : (
+        <Redirect to="/login" />
     );
 }
 
