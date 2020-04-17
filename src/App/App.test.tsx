@@ -1,21 +1,36 @@
 import React from "react";
-import { render } from "@testing-library/react";
-import { getItems } from "../repository/localStorage";
+import { render, wait } from "@testing-library/react";
+import { getItems } from "../repository/firebase";
 import App from "./App";
 
-jest.mock("../repository/localStorage", () => {
+jest.mock("../repository/firebase", () => {
     return {
         saveItems: jest.fn(),
         getItems: jest.fn(),
     };
 });
 
-test("renders Items from database", () => {
-    (getItems as jest.Mock).mockReturnValueOnce([
-        { id: "12345", name: "Read a book", doneDates: [] },
-    ]);
+jest.mock("../utils/firebase", () => {
+    const auth = (): object => ({
+        onAuthStateChanged: (callback: Function): void => {
+            callback({
+                uid: "foo",
+            });
+        },
+    });
+    auth.GoogleAuthProvider = jest.fn();
+
+    return {
+        auth,
+    };
+});
+
+test("renders Items from database", async () => {
+    (getItems as jest.Mock).mockReturnValueOnce(
+        Promise.resolve([{ id: "12345", name: "Read a book", doneDates: [] }])
+    );
 
     const { getAllByText } = render(<App />);
-    const elment = getAllByText(/Read a book/i)[0];
-    expect(elment).toBeInTheDocument();
+    await wait();
+    getAllByText(/Read a book/i);
 });

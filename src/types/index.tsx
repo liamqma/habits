@@ -3,3 +3,9 @@ export interface Item {
     name: string;
     doneDates: Date[];
 }
+
+export interface DBItem {
+    id: string;
+    name: string;
+    doneDates: string[];
+}
