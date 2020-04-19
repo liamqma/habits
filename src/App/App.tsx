@@ -10,13 +10,12 @@ import Login from "../Login/index";
 import UserButton from "../UserButton/index";
 import { GlobalStyle, LogoLink, H1, Page } from "./App.styles";
 import {
-    add as addItem,
     update as updateItem,
     remove as removeItem,
     done as doneItems,
     unDone as unDoneItems,
 } from "../utils/item";
-import { getItems, saveItems } from "../repository/firebase";
+import * as db from "../repository/firestore";
 
 function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);
@@ -24,7 +23,7 @@ function App(): JSX.Element {
 
     useEffect(() => {
         if (user) {
-            getItems(user.uid).then((items): void => {
+            db.getAll(user.uid).then((items): void => {
                 setItems(items);
             });
         }
@@ -40,22 +39,23 @@ function App(): JSX.Element {
         });
     }, []);
 
-    useEffect(() => {
-        if (user?.uid) {
-            saveItems(user.uid, items);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [items]);
-
     function add(name: string): void {
-        setItems(addItem(items, name));
+        if (user) {
+            db.add(user.uid, name).then((item) => {
+                setItems([...items, item]);
+            });
+        }
     }
 
     function edit(id: string, name: string): void {
-        setItems(updateItem(items, id, name));
+        if (id && name) {
+            db.update(id, name);
+            setItems(updateItem(items, id, name));
+        }
     }
 
     function remove(id: string): void {
+        db.remove(id);
         setItems(removeItem(items, id));
     }
 

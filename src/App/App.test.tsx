@@ -1,12 +1,11 @@
 import React from "react";
 import { render, wait } from "@testing-library/react";
-import { getItems } from "../repository/firebase";
+import { getAll } from "../repository/firestore";
 import App from "./App";
 
-jest.mock("../repository/firebase", () => {
+jest.mock("../repository/firestore", () => {
     return {
-        saveItems: jest.fn(),
-        getItems: jest.fn(),
+        getAll: jest.fn(),
     };
 });
 
@@ -26,7 +25,7 @@ jest.mock("../utils/firebase", () => {
 });
 
 test("renders Items from database", async () => {
-    (getItems as jest.Mock).mockReturnValueOnce(
+    (getAll as jest.Mock).mockReturnValueOnce(
         Promise.resolve([{ id: "12345", name: "Read a book", doneDates: [] }])
     );
 
