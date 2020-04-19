@@ -1,20 +1,5 @@
 import { Item } from "../types";
-import createId from "./createId";
 import isToday from "./isToday";
-
-export function add(items: Array<Item>, itemName: string): Array<Item> {
-    if (itemName) {
-        return [
-            ...items,
-            {
-                id: createId(),
-                name: itemName,
-                doneDates: [],
-            },
-        ];
-    }
-    return items;
-}
 
 export function remove(items: Array<Item>, id: string): Array<Item> {
     return items.filter((item) => item.id !== id);
@@ -25,18 +10,15 @@ export function update(
     id: string,
     name: string
 ): Array<Item> {
-    if (id && name) {
-        return [...items].map((item) => {
-            if (item.id === id) {
-                return {
-                    ...item,
-                    name,
-                };
-            }
-            return item;
-        });
-    }
-    return items;
+    return [...items].map((item) => {
+        if (item.id === id) {
+            return {
+                ...item,
+                name,
+            };
+        }
+        return item;
+    });
 }
 
 export function done(items: Array<Item>, id: string): Array<Item> {
