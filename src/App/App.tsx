@@ -9,13 +9,9 @@ import Edit from "../Edit/index";
 import Login from "../Login/index";
 import UserButton from "../UserButton/index";
 import { GlobalStyle, LogoLink, H1, Page } from "./App.styles";
-import {
-    update as updateItem,
-    remove as removeItem,
-    done as doneItems,
-    unDone as unDoneItems,
-} from "../utils/item";
+import isDoneToday from "../utils/isDoneToday";
 import * as db from "../repository/firestore";
+import * as store from "../repository/inMemory";
 
 function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);
@@ -40,7 +36,7 @@ function App(): JSX.Element {
     }, []);
 
     function add(name: string): void {
-        if (user) {
+        if (user && name) {
             db.add(user.uid, name).then((item) => {
                 setItems([...items, item]);
             });
@@ -48,23 +44,31 @@ function App(): JSX.Element {
     }
 
     function edit(id: string, name: string): void {
-        if (id && name) {
+        if (name) {
             db.update(id, name);
-            setItems(updateItem(items, id, name));
+            setItems(store.update(items, id, name));
         }
     }
 
     function remove(id: string): void {
         db.remove(id);
-        setItems(removeItem(items, id));
+        setItems(store.remove(items, id));
     }
 
     function done(id: string): void {
-        setItems(doneItems(items, id));
+        const item = items.find((item) => item.id === id);
+        if (item && !isDoneToday(item)) {
+            db.addDoneDate(id);
+            setItems(store.addDoneDate(items, id));
+        }
     }
 
     function unDone(id: string): void {
-        setItems(unDoneItems(items, id));
+        const item = items.find((item) => item.id === id);
+        if (item && isDoneToday(item)) {
+            db.removeDoneDate(id, item.doneDates[item.doneDates.length - 1]);
+            setItems(store.removeDoneDate(items, id));
+        }
     }
 
     return (

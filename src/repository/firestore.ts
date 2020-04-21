@@ -6,6 +6,7 @@ export function getAll(uid: string): Promise<Array<Item>> {
         .firestore()
         .collection("habits")
         .where("uid", "==", uid)
+        .orderBy("created", "desc")
         .get()
         .then((querySnapshot) => {
             const items: Array<Item> = [];
@@ -57,4 +58,28 @@ export function update(id: string, name: string): void {
 
 export function remove(id: string): void {
     firebase.firestore().collection("habits").doc(id).delete();
+}
+
+export function addDoneDate(id: string): void {
+    firebase
+        .firestore()
+        .collection("habits")
+        .doc(id)
+        .update({
+            doneDates: firebase.firestore.FieldValue.arrayUnion(
+                firebase.firestore.Timestamp.now()
+            ),
+        });
+}
+
+export function removeDoneDate(id: string, doneDate: Date): void {
+    firebase
+        .firestore()
+        .collection("habits")
+        .doc(id)
+        .update({
+            doneDates: firebase.firestore.FieldValue.arrayRemove(
+                firebase.firestore.Timestamp.fromDate(doneDate)
+            ),
+        });
 }
