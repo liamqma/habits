@@ -1,6 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import window from "global/window";
+import userEvent from "@testing-library/user-event";
 import Edit from "./index";
 import { buildItem } from "../../test/utils/generate";
 
@@ -60,9 +61,7 @@ test("should call edit() upon submitting", () => {
 
     const input = getByDisplayValue(item.name) as HTMLInputElement;
 
-    fireEvent.change(input, {
-        target: { value: "Watch movie" },
-    });
+    userEvent.type(input, "Watch movie");
 
     fireEvent.submit(getByTestId("form"));
     expect(edit).toBeCalledWith(item.id, "Watch movie");
@@ -92,9 +91,7 @@ test("should change Input value during typing", () => {
 
     const input = getByDisplayValue(item.name) as HTMLInputElement;
 
-    fireEvent.change(input, {
-        target: { value: "Watch movie" },
-    });
+    userEvent.type(input, "Watch movie");
 
     expect(input.value).toEqual("Watch movie");
 });
