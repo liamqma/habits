@@ -12,7 +12,7 @@ test("should change Input value during typing", () => {
     const { getByPlaceholderText } = render(<Add add={add} />);
 
     const input = getByPlaceholderText(
-        /What habit to develop\?/i
+        /what habit to develop\?/i
     ) as HTMLInputElement;
 
     userEvent.type(input, item.name);
@@ -23,27 +23,43 @@ test("should change Input value during typing", () => {
 test("should call add() when submtting", () => {
     const item = buildItem();
 
-    const { getByPlaceholderText, getByTestId } = render(<Add add={add} />);
+    const { getByPlaceholderText, getByRole } = render(<Add add={add} />);
 
     const input = getByPlaceholderText(
         /What habit to develop\?/i
     ) as HTMLInputElement;
 
     userEvent.type(input, item.name);
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.submit(getByRole("form"));
 
     expect(add).toBeCalledWith(item.name);
 });
 
 test("should clear Input value when submtting", () => {
-    const { getByPlaceholderText, getByTestId } = render(<Add add={add} />);
+    const { getByPlaceholderText, getByRole } = render(<Add add={add} />);
 
     const input = getByPlaceholderText(
         /What habit to develop\?/i
     ) as HTMLInputElement;
 
     userEvent.type(input, "xxx");
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.submit(getByRole("form"));
 
     expect(input.value).toEqual("");
+});
+
+test("should display submit button when value is not empty", () => {
+    const { getByPlaceholderText, queryByDisplayValue } = render(
+        <Add add={add} />
+    );
+
+    const input = getByPlaceholderText(
+        /What habit to develop\?/i
+    ) as HTMLInputElement;
+
+    expect(queryByDisplayValue("Add")).not.toBeInTheDocument();
+
+    userEvent.type(input, "xxx");
+
+    expect(queryByDisplayValue("Add")).toBeInTheDocument();
 });

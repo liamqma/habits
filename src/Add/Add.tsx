@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+const Form = styled.form`
+    position: relative;
+`;
+
 export const Input = styled.input`
     width: 100%;
     font-size: 24px;
@@ -23,6 +27,18 @@ export const Input = styled.input`
     }
 `;
 
+const SubmitButton = styled.input`
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 18px;
+    margin: auto 0;
+
+    &:hover {
+        cursor: pointer;
+    }
+`;
+
 interface Props {
     add: Function;
 }
@@ -41,7 +57,7 @@ function Add({ add }: Props): JSX.Element {
     };
 
     return (
-        <form onSubmit={handleSubmit} data-testid="form">
+        <Form onSubmit={handleSubmit} role="form">
             <Input
                 placeholder="What habit to develop?"
                 type="text"
@@ -50,7 +66,8 @@ function Add({ add }: Props): JSX.Element {
                 autoFocus
                 aria-label="New habbit"
             />
-        </form>
+            {name && <SubmitButton type="submit" value="Add" />}
+        </Form>
     );
 }
 
