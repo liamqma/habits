@@ -1,4 +1,5 @@
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 export const GlobalStyle = createGlobalStyle`
@@ -57,4 +58,19 @@ export const Page = styled.section`
     margin: 0 0 40px 0;
     position: relative;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+`;
+
+// Create the keyframes
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+// Here we create a component that will rotate everything we pass in over two seconds
+export const Loading = styled(AiOutlineLoading3Quarters)`
+    animation: ${rotate} 2s linear infinite;
+    font-size: 50px;
 `;

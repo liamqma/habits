@@ -8,6 +8,7 @@ import Add from "../Add/index";
 import Edit from "../Edit/index";
 import Login from "../Login/index";
 import UserButton from "../UserButton/index";
+import Loading from "../Loading/index";
 import { GlobalStyle, LogoLink, H1, Page } from "./App.styles";
 import isDoneToday from "../utils/isDoneToday";
 import * as db from "../repository/firestore";
@@ -16,10 +17,13 @@ import * as store from "../repository/inMemory";
 function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);
     const [user, setUser] = useState<User | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         if (user) {
+            setIsLoading(true);
             db.getAll(user.uid).then((items): void => {
+                setIsLoading(false);
                 setItems(items);
             });
         }
@@ -27,6 +31,7 @@ function App(): JSX.Element {
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(function (user) {
+            setIsLoading(false);
             if (user) {
                 setUser(user);
             } else {
@@ -77,29 +82,39 @@ function App(): JSX.Element {
                 <LogoLink to="/">
                     <H1>Habits</H1>
                 </LogoLink>
-                <UserButton user={user} />
-                <Page>
-                    <Switch>
-                        <Route path="/add">
-                            <Add add={add} />
-                        </Route>
-                        <Route path="/edit/:id">
-                            <Edit edit={edit} remove={remove} items={items} />
-                        </Route>
-                        <Route path="/login">
-                            <Login user={user} />
-                        </Route>
-                        <Route path="/">
-                            <Home
-                                user={user}
-                                items={items}
-                                add={add}
-                                done={done}
-                                unDone={unDone}
-                            />
-                        </Route>
-                    </Switch>
-                </Page>
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    <>
+                        <UserButton user={user} />
+                        <Page>
+                            <Switch>
+                                <Route path="/add">
+                                    <Add add={add} />
+                                </Route>
+                                <Route path="/edit/:id">
+                                    <Edit
+                                        edit={edit}
+                                        remove={remove}
+                                        items={items}
+                                    />
+                                </Route>
+                                <Route path="/login">
+                                    <Login user={user} />
+                                </Route>
+                                <Route path="/">
+                                    <Home
+                                        user={user}
+                                        items={items}
+                                        add={add}
+                                        done={done}
+                                        unDone={unDone}
+                                    />
+                                </Route>
+                            </Switch>
+                        </Page>
+                    </>
+                )}
                 <GlobalStyle />
             </>
         </Router>
