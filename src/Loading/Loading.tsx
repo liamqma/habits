@@ -6,6 +6,7 @@ const Canvas = styled.div`
     width: 100%;
     height: 100%;
     top: 0;
+    left: 0;
     opacity: 90%;
     background-image: radial-gradient(
         circle farthest-corner at center,
