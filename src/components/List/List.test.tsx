@@ -2,12 +2,12 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import List from "./index";
-import { buildItem } from "../../test/utils/generate";
-import isDoneToday from "../utils/isDoneToday";
+import { buildItem } from "../../../test/utils/generate";
+import isDoneToday from "../../utils/isDoneToday";
 
 const done = jest.fn();
 const unDone = jest.fn();
-jest.mock("../utils/isDoneToday");
+jest.mock("../../utils/isDoneToday");
 
 test("return null if no item", () => {
     const { container } = render(

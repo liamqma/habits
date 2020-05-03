@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Add from "./index";
-import { buildItem } from "../../test/utils/generate";
+import { buildItem } from "../../../test/utils/generate";
 
 test("change Input value, submit the form, then clear the Input value", () => {
     const add = jest.fn();

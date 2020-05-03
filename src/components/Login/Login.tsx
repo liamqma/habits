@@ -6,7 +6,7 @@ import { IoMdPerson } from "react-icons/io";
 import { User } from "firebase";
 import { Redirect } from "react-router-dom";
 import window from "global/window";
-import firebase from "../utils/firebase";
+import firebase from "../../utils/firebase";
 
 const provider = new firebase.auth.GoogleAuthProvider();
 

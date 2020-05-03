@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { MdDeleteForever } from "react-icons/md";
 import window from "global/window";
 import { Input, SubmitButton } from "../Add/index";
-import { Item } from "../types";
+import { Item } from "../../types";
 
 const Form = styled.form`
     position: relative;

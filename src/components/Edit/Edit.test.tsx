@@ -3,7 +3,7 @@ import { render, fireEvent } from "@testing-library/react";
 import window from "global/window";
 import userEvent from "@testing-library/user-event";
 import Edit from "./index";
-import { buildItem } from "../../test/utils/generate";
+import { buildItem } from "../../../test/utils/generate";
 
 const mockHistoryPush = jest.fn();
 

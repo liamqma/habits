@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Item } from "../types";
+import { Item } from "../../types";
 
 const Table = styled.table`
     margin: 0 auto;

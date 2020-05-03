@@ -1,19 +1,19 @@
 import React from "react";
 import { render, wait } from "@testing-library/react";
-import { getAll } from "../repository/firestore";
+import { getAll } from "../../repository/firestore";
 import App from "./App";
 
 function mockedLoading(): JSX.Element {
     return <div>Loading</div>;
 }
 
-jest.mock("../repository/firestore", () => {
+jest.mock("../../repository/firestore", () => {
     return {
         getAll: jest.fn(),
     };
 });
 
-jest.mock("../utils/firebase", () => {
+jest.mock("../../utils/firebase", () => {
     const auth = (): object => ({
         onAuthStateChanged: (callback: Function): void => {
             callback({

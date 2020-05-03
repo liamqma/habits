@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { User } from "firebase";
-import firebase from "../utils/firebase";
-import { Item } from "../types";
+import firebase from "../../utils/firebase";
+import { Item } from "../../types";
 import Home from "../Home/index";
 import Add from "../Add/index";
 import Edit from "../Edit/index";
@@ -10,9 +10,9 @@ import Login from "../Login/index";
 import UserButton from "../UserButton/index";
 import Loading from "../Loading/index";
 import { GlobalStyle, LogoLink, H1, Page } from "./App.styles";
-import isDoneToday from "../utils/isDoneToday";
-import * as db from "../repository/firestore";
-import * as store from "../repository/inMemory";
+import isDoneToday from "../../utils/isDoneToday";
+import * as db from "../../repository/firestore";
+import * as store from "../../repository/inMemory";
 
 function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);

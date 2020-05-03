@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import Add from "../Add/index";
 import List from "../List/index";
 import Summary from "../Summary/index";
-import { Item } from "../types";
+import { Item } from "../../types";
 
 interface Props {
     items: Array<Item>;
