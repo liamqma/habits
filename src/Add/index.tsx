@@ -1,1 +1,1 @@
-export { default, Input } from "./Add";
+export { default, Input, SubmitButton } from "./Add";

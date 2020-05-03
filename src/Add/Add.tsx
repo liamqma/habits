@@ -27,7 +27,7 @@ export const Input = styled.input`
     }
 `;
 
-const SubmitButton = styled.input`
+export const SubmitButton = styled.input`
     position: absolute;
     top: 0;
     bottom: 0;

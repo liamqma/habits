@@ -3,8 +3,12 @@ import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { MdDeleteForever } from "react-icons/md";
 import window from "global/window";
-import { Input } from "../Add/index";
+import { Input, SubmitButton } from "../Add/index";
 import { Item } from "../types";
+
+const Form = styled.form`
+    position: relative;
+`;
 
 const NotFoundWrapper = styled.div`
     padding: 15px 15px 15px 50px;
@@ -41,6 +45,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
         if (item && name && item.name !== name) {
             edit(item.id, name);
             window.alert("The name has been updated.");
+            history.push("/");
         }
         event.preventDefault();
     };
@@ -68,7 +73,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
 
     return (
         <>
-            <form onSubmit={handleSubmit} data-testid="form">
+            <Form onSubmit={handleSubmit} data-testid="form">
                 <Input
                     type="text"
                     value={name}
@@ -76,7 +81,8 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
                     autoFocus
                     aria-label="Habbit name"
                 />
-            </form>
+                {name && <SubmitButton type="submit" value="Update" />}
+            </Form>
             <RemoveButton onClick={confirmRemove} data-testid="remove">
                 <MdDeleteForever />
             </RemoveButton>

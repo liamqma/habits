@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { Item } from "../types";
-import getConsecutiveDays from "../utils/getConsecutiveDays";
 
 const Table = styled.table`
     margin: 0 auto;
@@ -35,7 +34,6 @@ function Summary({ items }: Props): JSX.Element | null {
                 <tr>
                     <th></th>
                     <th>Total days:</th>
-                    <th>Consecutive days:</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,7 +41,6 @@ function Summary({ items }: Props): JSX.Element | null {
                     <tr key={item.id}>
                         <td>{item.name}</td>
                         <td>{item.doneDates.length}</td>
-                        <td>{getConsecutiveDays(item.doneDates)}</td>
                     </tr>
                 ))}
             </tbody>
