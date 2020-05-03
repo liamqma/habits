@@ -12,7 +12,7 @@ export const UserLink = styled(Link)`
 `;
 
 interface Props {
-    user?: User;
+    user: User | null;
 }
 
 export default function App({ user }: Props): JSX.Element {

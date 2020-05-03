@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { User } from "firebase";
-import firebase from "../../utils/firebase";
 import { Item } from "../../types";
 import Home from "../Home/index";
 import Add from "../Add/index";
@@ -13,32 +11,21 @@ import { GlobalStyle, LogoLink, H1, Page } from "./App.styles";
 import isDoneToday from "../../utils/isDoneToday";
 import * as db from "../../repository/firestore";
 import * as store from "../../repository/inMemory";
+import useAuth from "../../hooks/use-auth";
 
 function App(): JSX.Element {
     const [items, setItems] = useState<Array<Item>>([]);
-    const [user, setUser] = useState<User | undefined>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { user } = useAuth();
 
     useEffect(() => {
         if (user) {
-            setIsLoading(true);
             db.getAll(user.uid).then((items): void => {
                 setIsLoading(false);
                 setItems(items);
             });
         }
     }, [user]);
-
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged(function (user) {
-            setIsLoading(false);
-            if (user) {
-                setUser(user);
-            } else {
-                setUser(undefined);
-            }
-        });
-    }, []);
 
     function add(name: string): void {
         if (user && name) {

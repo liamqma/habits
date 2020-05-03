@@ -41,7 +41,7 @@ const GuestButton = styled(Button)`
 `;
 
 interface Props {
-    user?: User;
+    user: User | null;
 }
 
 function Login({ user }: Props): JSX.Element {

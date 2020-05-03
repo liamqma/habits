@@ -11,7 +11,7 @@ interface Props {
     add: Function;
     done: Function;
     unDone: Function;
-    user?: User;
+    user: User | null;
 }
 
 function Home({ user, items, add, done, unDone }: Props): JSX.Element {

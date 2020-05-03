@@ -15,10 +15,11 @@ jest.mock("../../repository/firestore", () => {
 
 jest.mock("../../utils/firebase", () => {
     const auth = (): object => ({
-        onAuthStateChanged: (callback: Function): void => {
+        onAuthStateChanged: (callback: Function): Function => {
             callback({
                 uid: "foo",
             });
+            return jest.fn();
         },
     });
     auth.GoogleAuthProvider = jest.fn();
