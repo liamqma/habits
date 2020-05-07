@@ -1,55 +1,109 @@
 import React from "react";
-import { render, wait } from "@testing-library/react";
-import { getAll } from "../../repository/firestore";
+import { render, wait, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { getAll, add, update } from "../../repository/firestore";
+import useAuth from "../../hooks/use-auth";
 import App from "./App";
-
-function mockedLoading(): JSX.Element {
-    return <div>Loading</div>;
-}
+import { buildItem } from "../../../test/utils/generate";
 
 jest.mock("../../repository/firestore", () => {
     return {
         getAll: jest.fn(),
+        add: jest.fn(),
+        update: jest.fn(),
+        remove: jest.fn(),
+        addDoneDate: jest.fn(),
+        removeDoneDate: jest.fn(),
     };
 });
 
-jest.mock("../../utils/firebase", () => {
-    const auth = (): object => ({
-        onAuthStateChanged: (callback: Function): Function => {
-            callback({
-                uid: "foo",
-            });
-            return jest.fn();
-        },
-    });
-    auth.GoogleAuthProvider = jest.fn();
+jest.mock("../../hooks/use-auth");
 
-    return {
-        auth,
-    };
-});
+jest.mock("global/window", () => ({
+    alert: jest.fn(),
+    confirm: jest.fn(),
+}));
 
 jest.mock("../Loading/index", () => {
-    return mockedLoading;
+    function Loading(): JSX.Element {
+        return <div data-testid="loading"></div>;
+    }
+    return Loading;
 });
 
-test("render logo, items", async () => {
-    (getAll as jest.Mock).mockReturnValueOnce(
-        Promise.resolve([{ id: "12345", name: "Read a book", doneDates: [] }])
-    );
+test("render list, add item, update item", async () => {
+    const fakeItems = [buildItem(), buildItem()];
+    const fakeItem = buildItem();
+    const fakeItem2 = buildItem();
+    const uid = "User A";
 
-    const { getByText, getAllByText, queryByText } = render(<App />);
-
-    // display Loading
-    getByText(/loading/i);
-
-    // renders logo
-    getByText(/habits/i);
-
-    await wait(() => {
-        // renders list
-        getAllByText(/Read a book/i);
+    (useAuth as jest.Mock).mockReturnValue({
+        user: null,
     });
 
-    expect(queryByText(/loading/i)).not.toBeInTheDocument();
+    const {
+        getByText,
+        rerender,
+        getAllByText,
+        getByPlaceholderText,
+        getByDisplayValue,
+        getByTestId,
+        getByRole,
+        container,
+    } = render(<App />);
+
+    // should show sign in page
+    getByText(/sign in with/i);
+
+    (useAuth as jest.Mock).mockReturnValue({
+        user: {
+            uid,
+        },
+    });
+
+    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve(fakeItems));
+
+    rerender(<App />);
+
+    await wait(() => {
+        // should renders list
+        getAllByText(fakeItems[0].name);
+    });
+
+    getAllByText(fakeItems[1].name);
+    expect(getAll).toBeCalledWith(uid);
+    expect(getAll).toBeCalledTimes(1);
+
+    // should add item
+    (add as jest.Mock).mockResolvedValueOnce(fakeItem);
+    const input = getByPlaceholderText(
+        /what habit to develop\?/i
+    ) as HTMLInputElement;
+    userEvent.type(input, fakeItem.name);
+    fireEvent.submit(getByRole("form"));
+
+    expect(add).toBeCalledWith(uid, fakeItem.name);
+    expect(add).toBeCalledTimes(1);
+
+    await wait(() => {
+        getAllByText(fakeItem.name);
+    });
+
+    // should update item
+    (update as jest.Mock).mockResolvedValueOnce(null);
+    const link = container.querySelector(`[href="/edit/${fakeItem.id}"]`);
+    if (link === null) {
+        throw new Error(`unable to find the link "/edit/${fakeItem.id}"`);
+    }
+    userEvent.click(link);
+    await wait(() => {
+        getByDisplayValue(fakeItem.name);
+        userEvent.type(getByDisplayValue(fakeItem.name), fakeItem2.name);
+    });
+    fireEvent.submit(getByTestId("form"));
+    await wait(() => {
+        getAllByText(fakeItem2.name);
+    });
+    expect(update).toBeCalledWith(fakeItem.id, fakeItem2.name);
+    expect(update).toBeCalledTimes(1);
 });

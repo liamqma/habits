@@ -21,18 +21,24 @@ export function remove(items: Array<Item>, id: string): Array<Item> {
 }
 
 export function addDoneDate(items: Array<Item>, id: string): Array<Item> {
-    return items.map((item) => {
+    return [...items].map((item) => {
         if (item.id === id) {
-            item.doneDates.push(new Date());
+            return {
+                ...item,
+                doneDates: [...item.doneDates, new Date()],
+            };
         }
         return item;
     });
 }
 
 export function removeDoneDate(items: Array<Item>, id: string): Array<Item> {
-    return items.map((item) => {
+    return [...items].map((item) => {
         if (item.id === id) {
-            item.doneDates.pop();
+            return {
+                ...item,
+                doneDates: item.doneDates.slice(0, item.doneDates.length - 1),
+            };
         }
         return item;
     });

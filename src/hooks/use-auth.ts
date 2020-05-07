@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import firebase from "../utils/firebase";
 import { User } from "firebase";
+import firebase from "../utils/firebase";
 
 interface AuthState {
     user: User | null;

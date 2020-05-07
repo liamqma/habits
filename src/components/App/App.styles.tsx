@@ -70,7 +70,9 @@ const rotate = keyframes`
   }
 `;
 // Here we create a component that will rotate everything we pass in over two seconds
-export const Loading = styled(AiOutlineLoading3Quarters)`
+export const SmallLoading = styled(AiOutlineLoading3Quarters)`
     animation: ${rotate} 2s linear infinite;
-    font-size: 50px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 `;

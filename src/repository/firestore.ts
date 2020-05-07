@@ -47,8 +47,8 @@ export function add(uid: string, name: string): Promise<Item> {
         });
 }
 
-export function update(id: string, name: string): void {
-    firebase.firestore().collection("habits").doc(id).set(
+export function update(id: string, name: string): Promise<void> {
+    return firebase.firestore().collection("habits").doc(id).set(
         {
             name,
         },
@@ -56,12 +56,12 @@ export function update(id: string, name: string): void {
     );
 }
 
-export function remove(id: string): void {
-    firebase.firestore().collection("habits").doc(id).delete();
+export function remove(id: string): Promise<void> {
+    return firebase.firestore().collection("habits").doc(id).delete();
 }
 
-export function addDoneDate(id: string): void {
-    firebase
+export function addDoneDate(id: string): Promise<void> {
+    return firebase
         .firestore()
         .collection("habits")
         .doc(id)
@@ -72,8 +72,8 @@ export function addDoneDate(id: string): void {
         });
 }
 
-export function removeDoneDate(id: string, doneDate: Date): void {
-    firebase
+export function removeDoneDate(id: string, doneDate: Date): Promise<void> {
+    return firebase
         .firestore()
         .collection("habits")
         .doc(id)

@@ -56,10 +56,6 @@ function Login({ user }: Props): JSX.Element {
             });
     }
 
-    function onGuestButtonClick(): void {
-        window.alert("This feature is not avialable.");
-    }
-
     return user ? (
         <Redirect to="/" />
     ) : (
@@ -67,9 +63,6 @@ function Login({ user }: Props): JSX.Element {
             <GoogleSocialButton onClick={onGoogleButtonClick}>
                 <FaGoogle /> Sign in with Google
             </GoogleSocialButton>
-            <GuestButton onClick={onGuestButtonClick}>
-                <IoMdPerson /> I am a guest
-            </GuestButton>
         </Wrapper>
     );
 }
