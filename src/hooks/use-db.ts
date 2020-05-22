@@ -112,7 +112,7 @@ export default function useDB(user: User | null): DBState {
         }
     }
 
-    function dismissError() {
+    function dismissError(): void {
         setError(null);
     }
 

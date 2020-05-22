@@ -2,10 +2,8 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { FaGoogle } from "react-icons/fa";
-import { IoMdPerson } from "react-icons/io";
 import { User } from "firebase";
 import { Redirect } from "react-router-dom";
-import window from "global/window";
 import firebase from "../../utils/firebase";
 
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -34,10 +32,6 @@ const Button = styled.button`
 
 const GoogleSocialButton = styled(Button)`
     background-color: #de4e3b;
-`;
-
-const GuestButton = styled(Button)`
-    background-color: #53abee;
 `;
 
 interface Props {
