@@ -19,3 +19,11 @@ export function buildItem(overrides?: Overrides): Item {
         ...overrides,
     };
 }
+
+export function buildItems(numberOfItems: number): Array<Item> {
+    const items = [];
+    for (let i = 0; i < numberOfItems; i++) {
+        items.push(buildItem());
+    }
+    return items;
+}
