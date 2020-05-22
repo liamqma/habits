@@ -24,12 +24,7 @@ jest.mock("global/window", () => ({
     confirm: jest.fn(),
 }));
 
-jest.mock("../Loading/index", () => {
-    function Loading(): JSX.Element {
-        return <div data-testid="loading"></div>;
-    }
-    return Loading;
-});
+jest.mock("../Loading/index");
 
 test("render list, add item, update item", async () => {
     const fakeItems = [buildItem(), buildItem()];
