@@ -6,16 +6,7 @@ import useAuth from "../../hooks/use-auth";
 import App from "./App";
 import { buildItem } from "../../../test/utils/generate";
 
-jest.mock("../../repository/firestore", () => {
-    return {
-        getAll: jest.fn(),
-        add: jest.fn(),
-        update: jest.fn(),
-        remove: jest.fn(),
-        addDoneDate: jest.fn(),
-        removeDoneDate: jest.fn(),
-    };
-});
+jest.mock("../../repository/firestore");
 
 jest.mock("../../hooks/use-auth");
 
