@@ -22,11 +22,6 @@ jest.mock("react-router-dom", () => {
     };
 });
 
-jest.mock("global/window", () => ({
-    alert: jest.fn(),
-    confirm: jest.fn(),
-}));
-
 afterEach(() => {
     (window.confirm as jest.Mock).mockReset();
     (window.alert as jest.Mock).mockReset();

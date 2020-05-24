@@ -10,11 +10,6 @@ jest.mock("../../repository/firestore");
 
 jest.mock("../../hooks/use-auth");
 
-jest.mock("global/window", () => ({
-    alert: jest.fn(),
-    confirm: jest.fn(),
-}));
-
 jest.mock("../Loading/index");
 
 test("render list, add item, update item", async () => {
