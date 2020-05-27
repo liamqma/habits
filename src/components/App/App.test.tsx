@@ -1,7 +1,13 @@
 import React from "react";
 import { render, wait, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { getAll, add, update, remove } from "../../repository/firestore";
+import {
+    getAll,
+    add,
+    update,
+    remove,
+    addDoneDate,
+} from "../../repository/firestore";
 import window from "global/window";
 import useAuth from "../../hooks/use-auth";
 import App from "./App";
@@ -19,6 +25,29 @@ jest.mock("../Loading/index");
 
 beforeEach(async () => {
     (getAll as jest.Mock).mockReset();
+});
+
+test("clicking on item should add done date if today is not done", async () => {
+    const fakeItem = buildItem();
+    (useAuth as jest.Mock).mockReturnValue({
+        user: mockedUser,
+    });
+    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([fakeItem]));
+    (addDoneDate as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
+    (window.confirm as jest.Mock).mockReturnValueOnce(true);
+
+    const { getAllByText, getByText } = render(<App />);
+
+    await wait();
+
+    userEvent.click(getAllByText(fakeItem.name)[0]);
+
+    expect(addDoneDate).toBeCalledWith(fakeItem.id);
+    expect(addDoneDate).toBeCalledTimes(1);
+
+    await wait(() => {
+        getByText("1");
+    });
 });
 
 test("delete item", async () => {
