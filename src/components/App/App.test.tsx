@@ -7,6 +7,7 @@ import {
     update,
     remove,
     addDoneDate,
+    removeDoneDate,
 } from "../../repository/firestore";
 import window from "global/window";
 import useAuth from "../../hooks/use-auth";
@@ -23,8 +24,40 @@ jest.mock("../../hooks/use-auth");
 
 jest.mock("../Loading/index");
 
-beforeEach(async () => {
+beforeAll(() => {
+    (window.confirm as jest.Mock).mockReturnValueOnce(true);
+});
+
+beforeEach(() => {
     (getAll as jest.Mock).mockReset();
+});
+
+afterAll(() => {
+    (window.confirm as jest.Mock).mockReset();
+});
+
+test("clicking on item should remove done date if today is done", async () => {
+    const fakeItem = buildItem({ doneDates: [new Date()] });
+    (useAuth as jest.Mock).mockReturnValue({
+        user: mockedUser,
+    });
+    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([fakeItem]));
+    (removeDoneDate as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
+
+    const { getAllByText, getByText } = render(<App />);
+
+    await wait(() => {
+        getByText("1");
+    });
+
+    userEvent.click(getAllByText(fakeItem.name)[0]);
+
+    expect(removeDoneDate).toBeCalledWith(fakeItem.id, fakeItem.doneDates[0]);
+    expect(removeDoneDate).toBeCalledTimes(1);
+
+    await wait(() => {
+        getByText("0");
+    });
 });
 
 test("clicking on item should add done date if today is not done", async () => {
@@ -34,7 +67,6 @@ test("clicking on item should add done date if today is not done", async () => {
     });
     (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([fakeItem]));
     (addDoneDate as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
-    (window.confirm as jest.Mock).mockReturnValueOnce(true);
 
     const { getAllByText, getByText } = render(<App />);
 
@@ -57,7 +89,6 @@ test("delete item", async () => {
     });
     (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([fakeItem]));
     (remove as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
-    (window.confirm as jest.Mock).mockReturnValueOnce(true);
 
     const { getByDisplayValue, queryByText, container, getByTestId } = render(
         <App />
