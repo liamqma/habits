@@ -1,5 +1,5 @@
 import React from "react";
-import { render, wait, fireEvent } from "@testing-library/react";
+import { render, wait, fireEvent, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
     getAll,
@@ -13,6 +13,7 @@ import window from "global/window";
 import useAuth from "../../hooks/use-auth";
 import App from "./App";
 import { buildItem } from "../../../test/utils/generate";
+import { Item } from "../../types";
 
 const mockedUser = {
     uid: "User A",
@@ -28,7 +29,7 @@ beforeAll(() => {
     (window.confirm as jest.Mock).mockReturnValueOnce(true);
 });
 
-beforeEach(() => {
+afterEach(() => {
     (getAll as jest.Mock).mockReset();
 });
 
@@ -36,23 +37,40 @@ afterAll(() => {
     (window.confirm as jest.Mock).mockReset();
 });
 
-test("clicking on item should remove done date if today is done", async () => {
-    const fakeItem = buildItem({ doneDates: [new Date()] });
+interface CustomRenderResult extends RenderResult {
+    item: Item;
+}
+
+function renderApp(options?: { item?: Item }): CustomRenderResult {
+    const item = options?.item || buildItem();
     (useAuth as jest.Mock).mockReturnValue({
         user: mockedUser,
     });
-    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([fakeItem]));
+    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([item]));
     (removeDoneDate as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
+    (addDoneDate as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
+    (remove as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
+    (update as jest.Mock).mockResolvedValueOnce(null);
 
-    const { getAllByText, getByText } = render(<App />);
+    const utils = render(<App />);
+    return {
+        ...utils,
+        item,
+    };
+}
+
+test("clicking on item should remove done date if today is done", async () => {
+    const { getAllByText, getByText, item } = renderApp({
+        item: buildItem({ doneDates: [new Date()] }),
+    });
 
     await wait(() => {
         getByText("1");
     });
 
-    userEvent.click(getAllByText(fakeItem.name)[0]);
+    userEvent.click(getAllByText(item.name)[0]);
 
-    expect(removeDoneDate).toBeCalledWith(fakeItem.id, fakeItem.doneDates[0]);
+    expect(removeDoneDate).toBeCalledWith(item.id, item.doneDates[0]);
     expect(removeDoneDate).toBeCalledTimes(1);
 
     await wait(() => {
@@ -61,20 +79,13 @@ test("clicking on item should remove done date if today is done", async () => {
 });
 
 test("clicking on item should add done date if today is not done", async () => {
-    const fakeItem = buildItem();
-    (useAuth as jest.Mock).mockReturnValue({
-        user: mockedUser,
-    });
-    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([fakeItem]));
-    (addDoneDate as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
-
-    const { getAllByText, getByText } = render(<App />);
+    const { getAllByText, getByText, item } = renderApp();
 
     await wait();
 
-    userEvent.click(getAllByText(fakeItem.name)[0]);
+    userEvent.click(getAllByText(item.name)[0]);
 
-    expect(addDoneDate).toBeCalledWith(fakeItem.id);
+    expect(addDoneDate).toBeCalledWith(item.id);
     expect(addDoneDate).toBeCalledTimes(1);
 
     await wait(() => {
@@ -83,77 +94,68 @@ test("clicking on item should add done date if today is not done", async () => {
 });
 
 test("delete item", async () => {
-    const fakeItem = buildItem();
-    (useAuth as jest.Mock).mockReturnValue({
-        user: mockedUser,
-    });
-    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([fakeItem]));
-    (remove as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
-
-    const { getByDisplayValue, queryByText, container, getByTestId } = render(
-        <App />
-    );
+    const {
+        getByDisplayValue,
+        queryByText,
+        container,
+        getByTestId,
+        item,
+    } = renderApp();
 
     await wait();
 
-    const link = container.querySelector(`[href="/edit/${fakeItem.id}"]`);
+    const link = container.querySelector(`[href="/edit/${item.id}"]`);
     if (link === null) {
-        throw new Error(`unable to find the link "/edit/${fakeItem.id}"`);
+        throw new Error(`unable to find the link "/edit/${item.id}"`);
     }
     userEvent.click(link);
 
     await wait(() => {
-        getByDisplayValue(fakeItem.name);
+        getByDisplayValue(item.name);
     });
 
     userEvent.click(getByTestId("remove"));
-    expect(remove).toBeCalledWith(fakeItem.id);
+    expect(remove).toBeCalledWith(item.id);
     expect(remove).toBeCalledTimes(1);
 
     await wait();
-    expect(queryByText(fakeItem.name)).not.toBeInTheDocument();
+    expect(queryByText(item.name)).not.toBeInTheDocument();
 });
 
 test("update item", async () => {
     const fakeItem = buildItem();
-    const fakeItem2 = buildItem();
-    (useAuth as jest.Mock).mockReturnValue({
-        user: mockedUser,
-    });
-    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([fakeItem]));
-    (update as jest.Mock).mockResolvedValueOnce(null);
 
-    const { getAllByText, getByDisplayValue, container, getByTestId } = render(
-        <App />
-    );
+    const {
+        getAllByText,
+        getByDisplayValue,
+        container,
+        getByTestId,
+        item,
+    } = renderApp();
 
     await wait();
 
-    const link = container.querySelector(`[href="/edit/${fakeItem.id}"]`);
+    const link = container.querySelector(`[href="/edit/${item.id}"]`);
     if (link === null) {
-        throw new Error(`unable to find the link "/edit/${fakeItem.id}"`);
+        throw new Error(`unable to find the link "/edit/${item.id}"`);
     }
     userEvent.click(link);
     await wait(() => {
-        getByDisplayValue(fakeItem.name);
-        userEvent.type(getByDisplayValue(fakeItem.name), fakeItem2.name);
+        getByDisplayValue(item.name);
+        userEvent.type(getByDisplayValue(item.name), fakeItem.name);
     });
     fireEvent.submit(getByTestId("form"));
     await wait(() => {
-        getAllByText(fakeItem2.name);
+        getAllByText(fakeItem.name);
     });
-    expect(update).toBeCalledWith(fakeItem.id, fakeItem2.name);
+    expect(update).toBeCalledWith(item.id, fakeItem.name);
     expect(update).toBeCalledTimes(1);
 });
 
 test("add item", async () => {
     const fakeItem = buildItem();
-    (useAuth as jest.Mock).mockReturnValue({
-        user: mockedUser,
-    });
-    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([]));
 
-    const { getAllByText, getByPlaceholderText, getByRole } = render(<App />);
+    const { getAllByText, getByPlaceholderText, getByRole } = renderApp();
 
     (add as jest.Mock).mockResolvedValueOnce(fakeItem);
     const input = getByPlaceholderText(
