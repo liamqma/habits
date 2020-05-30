@@ -31,3 +31,16 @@ $ npm install
 
 $ npm start
 ```
+
+## TODO
+
+-   CI
+-   Code coverage
+-   Done in the last year
+-   Congrate if all done
+-   Modal window
+-   More login methonds
+-   Better 'add' and 'update' buttons
+-   Use it without login
+-   About: why the project exists
+-   Instructions
