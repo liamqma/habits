@@ -35,6 +35,7 @@ afterEach(() => {
 
 afterAll(() => {
     (window.confirm as jest.Mock).mockReset();
+    (window.alert as jest.Mock).mockReset();
 });
 
 interface CustomRenderResult extends RenderResult {
@@ -43,13 +44,13 @@ interface CustomRenderResult extends RenderResult {
 
 function renderApp(options?: { item?: Item }): CustomRenderResult {
     const item = options?.item || buildItem();
-    (useAuth as jest.Mock).mockReturnValue({
+    (useAuth as jest.Mock).mockReturnValueOnce({
         user: mockedUser,
     });
-    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve([item]));
-    (removeDoneDate as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
-    (addDoneDate as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
-    (remove as jest.Mock).mockReturnValueOnce(Promise.resolve(null));
+    (getAll as jest.Mock).mockResolvedValueOnce([item]);
+    (removeDoneDate as jest.Mock).mockResolvedValueOnce(null);
+    (addDoneDate as jest.Mock).mockResolvedValueOnce(null);
+    (remove as jest.Mock).mockResolvedValueOnce(null);
     (update as jest.Mock).mockResolvedValueOnce(null);
 
     const utils = render(<App />);
@@ -59,14 +60,29 @@ function renderApp(options?: { item?: Item }): CustomRenderResult {
     };
 }
 
+test("show error banner if getAll fails", async () => {
+    const fakeError = new Error("fake error");
+    (useAuth as jest.Mock).mockReturnValue({
+        user: mockedUser,
+    });
+    (getAll as jest.Mock).mockRejectedValueOnce(new Error("fake error"));
+
+    render(<App />);
+
+    await wait();
+
+    expect(window.alert).toBeCalledWith(fakeError.message);
+    expect(window.alert).toBeCalledTimes(1);
+});
+
 test("clicking on item should remove done date if today is done", async () => {
     const { getAllByText, getByText, item } = renderApp({
         item: buildItem({ doneDates: [new Date()] }),
     });
 
-    await wait(() => {
-        getByText("1");
-    });
+    await wait();
+
+    getByText("1");
 
     userEvent.click(getAllByText(item.name)[0]);
 
@@ -175,7 +191,7 @@ test("add item", async () => {
 test("login and render list, add item, update item", async () => {
     const fakeItems = [buildItem(), buildItem()];
 
-    (useAuth as jest.Mock).mockReturnValue({
+    (useAuth as jest.Mock).mockReturnValueOnce({
         user: null,
     });
 
@@ -184,11 +200,11 @@ test("login and render list, add item, update item", async () => {
     // should show sign in page
     getByText(/sign in with/i);
 
-    (useAuth as jest.Mock).mockReturnValue({
+    (useAuth as jest.Mock).mockReturnValueOnce({
         user: mockedUser,
     });
 
-    (getAll as jest.Mock).mockReturnValueOnce(Promise.resolve(fakeItems));
+    (getAll as jest.Mock).mockResolvedValueOnce(fakeItems);
 
     rerender(<App />);
 

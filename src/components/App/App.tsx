@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import window from "global/window";
 import Home from "../Home/index";
 import Add from "../Add/index";
 import Edit from "../Edit/index";
