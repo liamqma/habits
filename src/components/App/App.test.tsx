@@ -25,6 +25,8 @@ jest.mock("../../hooks/use-auth");
 
 jest.mock("../Loading/index");
 
+jest.mock("../Summary/index");
+
 beforeAll(() => {
     (window.confirm as jest.Mock).mockReturnValueOnce(true);
 });
@@ -44,7 +46,7 @@ interface CustomRenderResult extends RenderResult {
 
 function renderApp(options?: { item?: Item }): CustomRenderResult {
     const item = options?.item || buildItem();
-    (useAuth as jest.Mock).mockReturnValueOnce({
+    (useAuth as jest.Mock).mockReturnValue({
         user: mockedUser,
     });
     (getAll as jest.Mock).mockResolvedValueOnce([item]);
@@ -76,22 +78,22 @@ test("show error banner if getAll fails", async () => {
 });
 
 test("clicking on item should remove done date if today is done", async () => {
-    const { getAllByText, getByText, item } = renderApp({
+    const { getAllByText, getByTestId, item } = renderApp({
         item: buildItem({ doneDates: [new Date()] }),
     });
 
     await wait();
 
-    getByText("1");
+    expect(getByTestId(`${item.id}-dates`).textContent).toBe("1");
 
     userEvent.click(getAllByText(item.name)[0]);
 
     expect(removeDoneDate).toBeCalledWith(item.id, item.doneDates[0]);
     expect(removeDoneDate).toBeCalledTimes(1);
 
-    await wait(() => {
-        getByText("0");
-    });
+    await wait();
+
+    expect(getByTestId(`${item.id}-dates`).textContent).toBe("0");
 });
 
 test("clicking on item should add done date if today is not done", async () => {
