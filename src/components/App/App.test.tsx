@@ -23,9 +23,9 @@ jest.mock("../../repository/firestore");
 
 jest.mock("../../hooks/use-auth");
 
-jest.mock("../Loading/index");
+jest.mock("../Loading");
 
-jest.mock("../Summary/index");
+jest.mock("../Summary");
 
 beforeAll(() => {
     (window.confirm as jest.Mock).mockReturnValueOnce(true);
@@ -97,7 +97,7 @@ test("clicking on item should remove done date if today is done", async () => {
 });
 
 test("clicking on item should add done date if today is not done", async () => {
-    const { getAllByText, getByText, item } = renderApp();
+    const { getAllByText, getByTestId, item } = renderApp();
 
     await wait();
 
@@ -106,9 +106,8 @@ test("clicking on item should add done date if today is not done", async () => {
     expect(addDoneDate).toBeCalledWith(item.id);
     expect(addDoneDate).toBeCalledTimes(1);
 
-    await wait(() => {
-        getByText("1");
-    });
+    await wait();
+    expect(getByTestId(`${item.id}-dates`).textContent).toBe("1");
 });
 
 test("delete item", async () => {
