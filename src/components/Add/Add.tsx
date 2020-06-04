@@ -29,13 +29,19 @@ export const Input = styled.input`
 
 export const SubmitButton = styled.input`
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: calc(50% - 19px);
     right: 18px;
-    margin: auto 0;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px 8px;
+    outline: none;
+    background-color: #cc9a9a;
+    border: none;
+    border-radius: 5px;
+    color: white;
 
     &:hover {
-        cursor: pointer;
+        background-color: #a75454;
     }
 `;
 
