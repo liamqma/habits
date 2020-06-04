@@ -44,3 +44,4 @@ $ npm start
 -   Use it without login
 -   About: why the project exists
 -   Instructions
+-   Complete a goal
