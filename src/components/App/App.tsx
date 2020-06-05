@@ -6,7 +6,7 @@ import Add from "../Add/index";
 import Edit from "../Edit/index";
 import Login from "../Login/index";
 import UserButton from "../UserButton/index";
-import Loading from "../Loading/index";
+import Loading from "../Loading/Loading";
 import { GlobalStyle, LogoLink, H1, Page, SmallLoading } from "./App.styles";
 import useAuth from "../../hooks/use-auth";
 import useDB from "../../hooks/use-db";

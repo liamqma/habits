@@ -23,9 +23,9 @@ jest.mock("../../repository/firestore");
 
 jest.mock("../../hooks/use-auth");
 
-jest.mock("../Loading");
+jest.mock("../Loading/Loading");
 
-jest.mock("../Summary");
+jest.mock("../Summary/Summary");
 
 beforeAll(() => {
     (window.confirm as jest.Mock).mockReturnValueOnce(true);

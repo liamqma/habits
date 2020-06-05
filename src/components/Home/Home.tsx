@@ -3,7 +3,7 @@ import { User } from "firebase";
 import { Redirect } from "react-router-dom";
 import Add from "../Add/index";
 import List from "../List/index";
-import Summary from "../Summary/index";
+import Summary from "../Summary/Summary";
 import { Item } from "../../types";
 
 interface Props {

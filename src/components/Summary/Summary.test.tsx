@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import Summary from "./index";
+import Summary from "./Summary";
 
 test("return null if no item", () => {
     const { container } = render(<Summary items={[]} />);
