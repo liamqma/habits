@@ -40,7 +40,7 @@ $ npm start
 -   Congrate if all done
 -   Modal window
 -   More login methonds
--   -Better 'add' and 'update' buttons-
+-   ~~Better 'add' and 'update' buttons~~
 -   Use it without login
 -   About: why the project exists
 -   Instructions
