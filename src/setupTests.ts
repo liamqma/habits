@@ -8,3 +8,5 @@ jest.mock("global/window", () => ({
     alert: jest.fn(),
     confirm: jest.fn(),
 }));
+
+jest.mock("sweetalert");

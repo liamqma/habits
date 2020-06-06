@@ -1,6 +1,7 @@
 import React from "react";
 import { render, wait, fireEvent, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import window from "global/window";
 import {
     getAll,
     add,
@@ -9,7 +10,7 @@ import {
     addDoneDate,
     removeDoneDate,
 } from "../../repository/firestore";
-import window from "global/window";
+import swal from "sweetalert";
 import useAuth from "../../hooks/use-auth";
 import App from "./App";
 import { buildItem } from "../../../test/utils/generate";
@@ -37,7 +38,6 @@ afterEach(() => {
 
 afterAll(() => {
     (window.confirm as jest.Mock).mockReset();
-    (window.alert as jest.Mock).mockReset();
 });
 
 interface CustomRenderResult extends RenderResult {
@@ -73,8 +73,8 @@ test("show error banner if getAll fails", async () => {
 
     await wait();
 
-    expect(window.alert).toBeCalledWith(fakeError.message);
-    expect(window.alert).toBeCalledTimes(1);
+    expect(swal).toBeCalledWith(expect.any(String), fakeError.message, "error");
+    expect(swal).toBeCalledTimes(1);
 });
 
 test("clicking on item should remove done date if today is done", async () => {

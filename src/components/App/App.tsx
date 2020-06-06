@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import window from "global/window";
+import swal from "sweetalert";
 import Home from "../Home/index";
 import Add from "../Add/index";
 import Edit from "../Edit/index";
@@ -27,7 +27,11 @@ function App(): JSX.Element {
 
     if (error) {
         dismissError();
-        window.alert(error.message);
+        swal(
+            "Ah, this is awkward. We've got an error.",
+            error.message,
+            "error"
+        );
     }
 
     if (authStatusReported === false) {
