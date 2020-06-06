@@ -3,6 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { MdDeleteForever } from "react-icons/md";
 import window from "global/window";
+import swal from "sweetalert";
 import { Input, SubmitButton } from "../Add/index";
 import { Item } from "../../types";
 
@@ -44,7 +45,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
     const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>): void => {
         if (item && name && item.name !== name) {
             edit(item.id, name);
-            window.alert("The name has been updated.");
+            swal("The name has been updated.");
             history.push("/");
         }
         event.preventDefault();

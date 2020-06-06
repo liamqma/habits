@@ -1,6 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import window from "global/window";
+import swal from "sweetalert";
 import userEvent from "@testing-library/user-event";
 import Edit from "./index";
 import { buildItem } from "../../../test/utils/generate";
@@ -25,6 +26,7 @@ jest.mock("react-router-dom", () => {
 afterEach(() => {
     (window.confirm as jest.Mock).mockReset();
     (window.alert as jest.Mock).mockReset();
+    (swal as jest.Mock).mockReset();
 });
 
 test("should render 404 if habit is not found", () => {
@@ -61,7 +63,7 @@ test("should call edit() upon submitting", () => {
     fireEvent.submit(getByTestId("form"));
     expect(edit).toBeCalledWith(item.id, "Watch movie");
     expect(edit).toBeCalledTimes(1);
-    expect(window.alert).toBeCalledTimes(1);
+    expect(swal).toBeCalledTimes(1);
 });
 
 test("should not call edit() if name doesn't change", () => {
