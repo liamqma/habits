@@ -4,9 +4,4 @@
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom/extend-expect";
 
-jest.mock("global/window", () => ({
-    alert: jest.fn(),
-    confirm: jest.fn(),
-}));
-
 jest.mock("sweetalert");

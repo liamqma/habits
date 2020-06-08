@@ -1,6 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
-import window from "global/window";
+import { render, fireEvent, wait } from "@testing-library/react";
 import swal from "sweetalert";
 import userEvent from "@testing-library/user-event";
 import Edit from "./index";
@@ -24,8 +23,6 @@ jest.mock("react-router-dom", () => {
 });
 
 afterEach(() => {
-    (window.confirm as jest.Mock).mockReset();
-    (window.alert as jest.Mock).mockReset();
     (swal as jest.Mock).mockReset();
 });
 
@@ -76,7 +73,7 @@ test("should not call edit() if name doesn't change", () => {
 
     fireEvent.submit(getByTestId("form"));
     expect(edit).not.toBeCalled();
-    expect(window.alert).not.toBeCalled();
+    expect(swal).not.toBeCalled();
 });
 
 test("should change Input value during typing", () => {
@@ -93,10 +90,10 @@ test("should change Input value during typing", () => {
     expect(input.value).toEqual("Watch movie");
 });
 
-test("should remove if clicking upon remove button and confirm", () => {
+test("should remove if clicking upon remove button and confirm", async () => {
     const remove = jest.fn();
     const item = buildItem({ id: "foo" });
-    (window.confirm as jest.Mock).mockReturnValueOnce(true);
+    (swal as jest.Mock).mockResolvedValueOnce(true);
 
     const { getByTestId } = render(
         <Edit items={[item]} edit={jest.fn} remove={remove} />
@@ -105,6 +102,8 @@ test("should remove if clicking upon remove button and confirm", () => {
     const button = getByTestId("remove");
     fireEvent.click(button);
 
+    await wait();
+
     expect(remove).toBeCalledWith(item.id);
     expect(remove).toBeCalledTimes(1);
 });
@@ -112,7 +111,7 @@ test("should remove if clicking upon remove button and confirm", () => {
 test("should redirect to homepage after remove", () => {
     const item = buildItem({ id: "foo" });
 
-    (window.confirm as jest.Mock).mockReturnValueOnce(true);
+    (swal as jest.Mock).mockResolvedValueOnce(true);
 
     const { getByTestId } = render(
         <Edit items={[item]} edit={jest.fn} remove={jest.fn} />

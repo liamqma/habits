@@ -38,7 +38,7 @@ $ npm start
 -   Code coverage
 -   Done in the last year
 -   Congrate if all done
--   Modal window
+-   ~~Modal window~~
 -   More login methonds
 -   ~~Better 'add' and 'update' buttons~~
 -   Use it without login

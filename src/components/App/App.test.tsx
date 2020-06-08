@@ -1,7 +1,6 @@
 import React from "react";
 import { render, wait, fireEvent, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import window from "global/window";
 import {
     getAll,
     add,
@@ -28,16 +27,8 @@ jest.mock("../Loading/Loading");
 
 jest.mock("../Summary/Summary");
 
-beforeAll(() => {
-    (window.confirm as jest.Mock).mockReturnValueOnce(true);
-});
-
 afterEach(() => {
     (getAll as jest.Mock).mockReset();
-});
-
-afterAll(() => {
-    (window.confirm as jest.Mock).mockReset();
 });
 
 interface CustomRenderResult extends RenderResult {
@@ -111,6 +102,8 @@ test("clicking on item should add done date if today is not done", async () => {
 });
 
 test("delete item", async () => {
+    (swal as jest.Mock).mockResolvedValueOnce(true);
+
     const {
         getByDisplayValue,
         queryByText,
@@ -132,6 +125,9 @@ test("delete item", async () => {
     });
 
     userEvent.click(getByTestId("remove"));
+
+    await wait();
+
     expect(remove).toBeCalledWith(item.id);
     expect(remove).toBeCalledTimes(1);
 

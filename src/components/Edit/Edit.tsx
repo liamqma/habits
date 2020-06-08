@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { MdDeleteForever } from "react-icons/md";
-import window from "global/window";
 import swal from "sweetalert";
 import { Input, SubmitButton } from "../Add/index";
 import { Item } from "../../types";
@@ -52,10 +51,17 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
     };
 
     function confirmRemove(): void {
-        if (window.confirm("Do you really want to delete permanently?")) {
-            remove(id);
-            history.push("/");
-        }
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this habit!",
+            icon: "warning",
+            dangerMode: true,
+        }).then((confirmDelete) => {
+            if (confirmDelete) {
+                remove(id);
+                history.push("/");
+            }
+        });
     }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
