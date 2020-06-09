@@ -23,6 +23,8 @@ function App(): JSX.Element {
         isLoading,
         error,
         dismissError,
+        showAllDone,
+        dismissAllDone,
     } = useDB(user);
 
     if (error) {
@@ -32,6 +34,14 @@ function App(): JSX.Element {
             error.message,
             "error"
         );
+    }
+
+    if (showAllDone) {
+        dismissAllDone();
+        swal({
+            title: "Congratulations! Your hard work will get paid off.",
+            icon: "success",
+        });
     }
 
     if (authStatusReported === false) {

@@ -68,6 +68,8 @@ test("show error banner if getAll fails", async () => {
     expect(swal).toBeCalledTimes(1);
 });
 
+test.todo("show all done banner if complete the last item");
+
 test("clicking on item should remove done date if today is done", async () => {
     const { getAllByText, getByTestId, item } = renderApp({
         item: buildItem({ doneDates: [new Date()] }),

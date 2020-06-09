@@ -3,7 +3,7 @@ import { User } from "firebase";
 import * as db from "../repository/firestore";
 import * as store from "../repository/inMemory";
 import { Item } from "../types";
-import isDoneToday from "../utils/isDoneToday";
+import { isDoneToday, isTodayAllDone } from "../utils/today";
 
 interface DBState {
     items: Array<Item>;
@@ -15,12 +15,15 @@ interface DBState {
     dismissError: Function;
     error: Error | null;
     isLoading: boolean;
+    showAllDone: boolean;
+    dismissAllDone: Function;
 }
 
 export default function useDB(user: User | null): DBState {
     const [items, setItems] = useState<Array<Item>>([]);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [showAllDone, setShowAllDone] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -83,7 +86,11 @@ export default function useDB(user: User | null): DBState {
     function done(id: string): void {
         const item = items.find((item) => item.id === id);
         if (item && !isDoneToday(item)) {
-            setItems(store.addDoneDate(items, id));
+            const newItems = store.addDoneDate(items, id);
+            if (isTodayAllDone(newItems)) {
+                setShowAllDone(true);
+            }
+            setItems(newItems);
             setIsLoading(true);
             db.addDoneDate(id)
                 .then(() => {
@@ -116,6 +123,10 @@ export default function useDB(user: User | null): DBState {
         setError(null);
     }
 
+    function dismissAllDone(): void {
+        setShowAllDone(false);
+    }
+
     return {
         items,
         add,
@@ -126,5 +137,7 @@ export default function useDB(user: User | null): DBState {
         error,
         dismissError,
         isLoading,
+        showAllDone,
+        dismissAllDone,
     };
 }

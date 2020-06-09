@@ -44,7 +44,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
     const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>): void => {
         if (item && name && item.name !== name) {
             edit(item.id, name);
-            swal("The name has been updated.");
+            swal({ title: "The name has been updated.", icon: "info" });
             history.push("/");
         }
         event.preventDefault();

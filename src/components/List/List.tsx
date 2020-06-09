@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { Item } from "../../types";
-import isDoneToday from "../../utils/isDoneToday";
+import { isDoneToday } from "../../utils/today";
 
 const LinkButton = styled(Link)`
     position: absolute;
