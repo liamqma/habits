@@ -45,3 +45,4 @@ $ npm start
 -   About: why the project exists
 -   Instructions
 -   Complete a goal
+-   Add browser support to README
