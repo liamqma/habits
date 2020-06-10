@@ -29,6 +29,7 @@ jest.mock("../Summary/Summary");
 
 afterEach(() => {
     (getAll as jest.Mock).mockReset();
+    (swal as jest.Mock).mockReset();
 });
 
 interface CustomRenderResult extends RenderResult {
@@ -68,8 +69,6 @@ test("show error banner if getAll fails", async () => {
     expect(swal).toBeCalledTimes(1);
 });
 
-test.todo("show all done banner if complete the last item");
-
 test("clicking on item should remove done date if today is done", async () => {
     const { getAllByText, getByTestId, item } = renderApp({
         item: buildItem({ doneDates: [new Date()] }),
@@ -101,6 +100,12 @@ test("clicking on item should add done date if today is not done", async () => {
 
     await wait();
     expect(getByTestId(`${item.id}-dates`).textContent).toBe("1");
+
+    // Expect the congrats message
+    expect(swal).toBeCalledWith(
+        expect.objectContaining({ title: expect.any(String), icon: "success" })
+    );
+    expect(swal).toBeCalledTimes(1);
 });
 
 test("delete item", async () => {
