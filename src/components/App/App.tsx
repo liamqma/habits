@@ -39,7 +39,7 @@ function App(): JSX.Element {
     if (showAllDone) {
         dismissAllDone();
         swal({
-            title: "Congratulations! Your hard work will get paid off.",
+            title: "Congratulations! Your leveled up!",
             icon: "success",
         });
     }
