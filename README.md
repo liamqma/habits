@@ -37,7 +37,7 @@ $ npm start
 -   CI
 -   Code coverage
 -   Done in the last year
--   Congrate if all done
+-   ~~Congrate if all done~~
 -   ~~Modal window~~
 -   More login methonds
 -   ~~Better 'add' and 'update' buttons~~
