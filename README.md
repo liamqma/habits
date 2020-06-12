@@ -13,19 +13,15 @@ TBD
 ## Development
 
 ```
-$ touch src/config.json
-
-# Fill in config.json
-{
-    "apiKey": "xxx",
-    "authDomain": "xxx.firebaseapp.com",
-    "databaseURL": "https://xxx.firebaseio.com",
-    "projectId": "xxx",
-    "storageBucket": "xxx",
-    "messagingSenderId": "xxx",
-    "appId": "xxx",
-    "measurementId": "xxx"
-}
+# Fill in .env
+REACT_APP_API_KEY=XXX
+REACT_APP_AUTH_DOMAIN=XXX
+REACT_APP_DATABASE_URL=XXX
+REACT_APP_PROJECT_ID=XXX
+REACT_APP_STORAGE_BUCKET=XXX
+REACT_APP_MESSAGING_SENDER_ID=XXX
+REACT_APP_APP_ID=XXX
+REACT_APP_MEASUREMENT_ID=XXX
 
 $ npm install
 
