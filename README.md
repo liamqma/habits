@@ -1,5 +1,7 @@
 # Habits
 
+[![Build Status](https://travis-ci.org/liamqma/habits.svg?branch=master)](https://travis-ci.org/liamqma/habits)
+
 A completely free service which help build good habits and break bad ones
 
 ## Why do I build this
