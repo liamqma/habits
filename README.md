@@ -33,7 +33,7 @@ $ npm start
 ## TODO
 
 -   CI
--   Code coverage
+-   Code coverage (Waiting for Jest 26 avilable in react-scripts)
 -   Done in the last year
 -   ~~Congrate if all done~~
 -   ~~Modal window~~
