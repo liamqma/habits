@@ -20,7 +20,7 @@
         "eject": "react-scripts eject",
         "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
         "check-types": "tsc",
-        "predeploy": "npm run check-types && npm run lint && npm run build",
+        "predeploy": "npm run check-types && npm run lint && npm test && npm run build",
         "deploy": "firebase deploy"
     },
     "eslintConfig": {
