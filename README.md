@@ -34,9 +34,9 @@ $ npm start
 
 ## TODO
 
--   CI
+-   ~~CI~~
 -   Code coverage (Waiting for Jest 26 avilable in react-scripts)
--   Done in the last year
+-   Github calendar contribution
 -   ~~Congrate if all done~~
 -   ~~Modal window~~
 -   More login methonds
