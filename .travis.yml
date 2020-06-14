@@ -1,7 +1,8 @@
 language: node_js
 node_js: 12
-before_deploy: npm run predeploy
+script: npm run predeploy
 deploy:
     provider: firebase
+    skip_cleanup: true
     token:
         secure: dG1+JJjNZUGmNUsPWXm04jqjBeLo3Jjgcj6nskd77RUhlXqkpLS3e34de97GZNzMS4Ju2V7CxUUoN67JRAbgmW1GlECRNft0JC0GBTNyS4VSIgd+l/3lo/xTO5yR4zsOyGcxydoQ8m8WP0gragCgniHu/p68vMybgzKMJXNJy2SmqwUEZ7rDkPpRXCBO9W6nKY0glYl3DJonvWjHBYgkmD4Rzx20I95Yyv8rY4SkoN+s2v7PdYz7Z3d+oxFNp5L4FXeL/WjFf3/U1HPpYyPeiJk2uCBOJe/2+TIk9mdCud4uf3HQZNlGnPOJaI4gqtxQ1Mrogi22BWk3UILNgAsmvpckJpTOVYxewJYCA9818/rP2kM6qZf/WaY5wYHYSeLnpiicl6ZNw7XbUUh8Sr/p3s8TlDXA1YTKv2XGX+n6Mp/qUUSynRcSjNYOdZ7+BTix5EC/3qYQlX7aMy5btWPuT7YeOyRi0sykA87Ot+ppxzHxTMx6L5+rs/S3ba8A9FXecpG19YLBWLO3LH+Jlm2tPgIZSIwAUxAGtjQQKSBFmo9qDFkX8+lTfvIL68zCcE8jOPf/5qixQGI/L3kgaR2MnrDtgOzjiov5bvInFj+/lLN5CnQ0U230e7JT0fXf3H3y1EjF0Y0ydGnVCkkz8PB6L/hgx9YeyTm0e5jFFqET0aY=
