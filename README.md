@@ -15,6 +15,8 @@ TBD
 ## Development
 
 ```
+$ touch .env
+
 # Fill in .env
 REACT_APP_API_KEY=XXX
 REACT_APP_AUTH_DOMAIN=XXX
