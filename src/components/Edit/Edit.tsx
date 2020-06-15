@@ -2,30 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { MdDeleteForever } from "react-icons/md";
-import Calendar from "react-github-contribution-calendar";
+import Calendar from "./Calendar";
 import swal from "sweetalert";
 import { Input, SubmitButton } from "../Add/index";
 import { Item } from "../../types";
-
-const defaultCalendarProps = {
-    weekNames: ["", "M", "", "W", "", "F", ""],
-    monthNames: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ],
-    panelColors: ["#EEE", "#cc9a9a"],
-    dateFormat: "YYYY-M-D",
-};
 
 const Form = styled.form`
     position: relative;
@@ -98,13 +78,6 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
                 </span>
             </NotFoundWrapper>
         );
-    const calendarValues: { [date: string]: number } = {};
-    item.doneDates.forEach((doneDate) => {
-        const formatedDoneDate = `${doneDate.getFullYear()}-${doneDate.getMonth()}-${doneDate.getDate()}`;
-        calendarValues[formatedDoneDate] = 1;
-    });
-    const now = new Date();
-    const until = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
     return (
         <>
             <Form onSubmit={handleSubmit} data-testid="form">
@@ -120,11 +93,7 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
             <RemoveButton onClick={confirmRemove} data-testid="remove">
                 <MdDeleteForever />
             </RemoveButton>
-            <Calendar
-                {...defaultCalendarProps}
-                values={calendarValues}
-                until={until}
-            />
+            <Calendar item={item} />
         </>
     );
 }
