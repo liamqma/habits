@@ -39,6 +39,7 @@ export const SubmitButton = styled.input`
     border: none;
     border-radius: 5px;
     color: white;
+    -webkit-appearance: none;
 
     &:hover {
         background-color: #a75454;

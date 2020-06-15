@@ -7,6 +7,7 @@
         "js-cookie": "^2.2.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
+        "react-github-contribution-calendar": "^2.0.0",
         "react-icons": "^3.9.0",
         "react-router-dom": "^5.1.2",
         "styled-components": "^5.0.1",

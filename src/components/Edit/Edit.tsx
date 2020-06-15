@@ -2,9 +2,30 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { MdDeleteForever } from "react-icons/md";
+import Calendar from "react-github-contribution-calendar";
 import swal from "sweetalert";
 import { Input, SubmitButton } from "../Add/index";
 import { Item } from "../../types";
+
+const defaultCalendarProps = {
+    weekNames: ["", "M", "", "W", "", "F", ""],
+    monthNames: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ],
+    panelColors: ["#EEE", "#DDD", "#AAA", "#444"],
+    dateFormat: "YYYY-MM-DD",
+};
 
 const Form = styled.form`
     position: relative;
@@ -19,7 +40,7 @@ const NotFoundWrapper = styled.div`
 
 const RemoveButton = styled.button`
     font-size: 30px;
-    margin: 10px auto;
+    margin: 10px auto 0;
     display: block;
 `;
 
@@ -77,7 +98,17 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
                 </span>
             </NotFoundWrapper>
         );
-
+    const calendarValues: { [date: string]: number } = {};
+    item.doneDates.forEach((doneDate) => {
+        const formatedDoneDate = `${doneDate.getFullYear()}-${(
+            "0" + doneDate.getMonth()
+        ).slice(-2)}-${("0" + doneDate.getDate()).slice(-2)}`;
+        calendarValues[formatedDoneDate] = 1;
+    });
+    const now = new Date();
+    const until = `${now.getFullYear()}-${("0" + now.getMonth()).slice(-2)}-${(
+        "0" + now.getDate()
+    ).slice(-2)}`;
     return (
         <>
             <Form onSubmit={handleSubmit} data-testid="form">
@@ -93,6 +124,11 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
             <RemoveButton onClick={confirmRemove} data-testid="remove">
                 <MdDeleteForever />
             </RemoveButton>
+            <Calendar
+                {...defaultCalendarProps}
+                values={calendarValues}
+                until={until}
+            />
         </>
     );
 }
