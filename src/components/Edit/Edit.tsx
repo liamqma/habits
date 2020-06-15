@@ -23,8 +23,8 @@ const defaultCalendarProps = {
         "Nov",
         "Dec",
     ],
-    panelColors: ["#EEE", "#DDD", "#AAA", "#444"],
-    dateFormat: "YYYY-MM-DD",
+    panelColors: ["#EEE", "#cc9a9a"],
+    dateFormat: "YYYY-M-D",
 };
 
 const Form = styled.form`
@@ -100,15 +100,11 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
         );
     const calendarValues: { [date: string]: number } = {};
     item.doneDates.forEach((doneDate) => {
-        const formatedDoneDate = `${doneDate.getFullYear()}-${(
-            "0" + doneDate.getMonth()
-        ).slice(-2)}-${("0" + doneDate.getDate()).slice(-2)}`;
+        const formatedDoneDate = `${doneDate.getFullYear()}-${doneDate.getMonth()}-${doneDate.getDate()}`;
         calendarValues[formatedDoneDate] = 1;
     });
     const now = new Date();
-    const until = `${now.getFullYear()}-${("0" + now.getMonth()).slice(-2)}-${(
-        "0" + now.getDate()
-    ).slice(-2)}`;
+    const until = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
     return (
         <>
             <Form onSubmit={handleSubmit} data-testid="form">
