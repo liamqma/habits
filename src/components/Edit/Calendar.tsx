@@ -26,19 +26,25 @@ interface Props {
     item: Item;
 }
 
+export interface CalendarValues {
+    [date: string]: number;
+}
+
+export function formateDate(date: Date): string {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+}
+
 export default function Calendar({ item }: Props): JSX.Element {
-    const calendarValues: { [date: string]: number } = {};
+    const calendarValues: CalendarValues = {};
     item.doneDates.forEach((doneDate) => {
-        const formatedDoneDate = `${doneDate.getFullYear()}-${doneDate.getMonth()}-${doneDate.getDate()}`;
+        const formatedDoneDate = formateDate(doneDate);
         calendarValues[formatedDoneDate] = 1;
     });
-    const now = new Date();
-    const until = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
     return (
         <ModuleCalendar
             {...defaultCalendarProps}
             values={calendarValues}
-            until={until}
+            until={formateDate(new Date())}
         />
     );
 }
