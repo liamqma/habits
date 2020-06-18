@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { FaGoogle } from "react-icons/fa";
+import { GiCloakDagger } from "react-icons/gi";
 import { User } from "firebase";
 import { Redirect } from "react-router-dom";
 import firebase from "../../utils/firebase";
@@ -34,6 +35,10 @@ const GoogleSocialButton = styled(Button)`
     background-color: #de4e3b;
 `;
 
+const AnonymousButton = styled(Button)`
+    background-color: grey;
+`;
+
 interface Props {
     user: User | null;
 }
@@ -50,6 +55,15 @@ function Login({ user }: Props): JSX.Element {
             });
     }
 
+    function onAnonymousButtonClick(): void {
+        firebase
+            .auth()
+            .signInAnonymously()
+            .then(function () {
+                history.push("/");
+            });
+    }
+
     return user ? (
         <Redirect to="/" />
     ) : (
@@ -57,6 +71,9 @@ function Login({ user }: Props): JSX.Element {
             <GoogleSocialButton onClick={onGoogleButtonClick}>
                 <FaGoogle /> Sign in with Google
             </GoogleSocialButton>
+            <AnonymousButton onClick={onAnonymousButtonClick}>
+                <GiCloakDagger /> Sign in Anonymously
+            </AnonymousButton>
         </Wrapper>
     );
 }
