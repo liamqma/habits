@@ -36,7 +36,7 @@ $ npm start
 
 -   ~~CI~~
 -   Code coverage (Waiting for Jest 26 avilable in react-scripts)
--   Github calendar contribution
+-   ~~Github calendar contribution~~
 -   ~~Congrate if all done~~
 -   ~~Modal window~~
 -   More login methonds
