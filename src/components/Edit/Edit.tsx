@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { MdDeleteForever } from "react-icons/md";
+import { FaThumbsUp, FaTrash } from "react-icons/fa";
 import Calendar from "./Calendar";
 import swal from "sweetalert";
 import { Input, SubmitButton } from "../Add/index";
@@ -18,19 +18,39 @@ const NotFoundWrapper = styled.div`
     line-height: 1.4em;
 `;
 
-const RemoveButton = styled.button`
-    font-size: 30px;
-    margin: 10px auto 0;
+const Button = styled.button`
+    color: #fff;
+    padding: 15px 15px 15px 35px;
+    border-radius: 5px;
+    font-weight: 600;
+    position: relative;
     display: block;
+    margin: 10px auto;
+    min-width: 115px;
+
+    svg {
+        position: absolute;
+        top: 17px;
+        left: 15px;
+    }
+`;
+
+const RemoveButton = styled(Button)`
+    background-color: #dc3545;
+`;
+
+const CompleteButton = styled(Button)`
+    background-color: #cc9a9a;
 `;
 
 interface Props {
     edit: Function;
     remove: Function;
+    complete: Function;
     items: Array<Item>;
 }
 
-function Edit({ edit, remove, items }: Props): JSX.Element {
+function Edit({ edit, remove, complete, items }: Props): JSX.Element {
     const { id } = useParams();
     const item = items.find((item) => item.id === id);
     const [name, setName] = useState("");
@@ -65,6 +85,18 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
         });
     }
 
+    function confirmComplete(): void {
+        swal({
+            title: "Do you want to complete this habit?",
+            icon: "info",
+        }).then((confirmComplete) => {
+            if (confirmComplete) {
+                complete(id);
+                history.push("/");
+            }
+        });
+    }
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setName(event.target.value);
     };
@@ -90,8 +122,11 @@ function Edit({ edit, remove, items }: Props): JSX.Element {
                 />
                 {name && <SubmitButton type="submit" value="Update" />}
             </Form>
+            <CompleteButton onClick={confirmComplete}>
+                <FaThumbsUp /> Complete
+            </CompleteButton>
             <RemoveButton onClick={confirmRemove} data-testid="remove">
-                <MdDeleteForever />
+                <FaTrash /> Delete
             </RemoveButton>
             <Calendar item={item} />
         </>

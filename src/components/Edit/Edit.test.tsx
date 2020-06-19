@@ -28,7 +28,7 @@ afterEach(() => {
 
 test("should render 404 if habit is not found", () => {
     const { getByText } = render(
-        <Edit items={[]} edit={jest.fn} remove={jest.fn} />
+        <Edit items={[]} edit={jest.fn} complete={jest.fn} remove={jest.fn} />
     );
     getByText("Habit is not found.");
 });
@@ -37,10 +37,17 @@ test("should render name when name is available", () => {
     const item = buildItem({ id: "foo" });
 
     const { getByDisplayValue, rerender } = render(
-        <Edit items={[]} edit={jest.fn} remove={jest.fn} />
+        <Edit items={[]} edit={jest.fn} complete={jest.fn} remove={jest.fn} />
     );
 
-    rerender(<Edit items={[item]} edit={jest.fn} remove={jest.fn} />);
+    rerender(
+        <Edit
+            items={[item]}
+            complete={jest.fn}
+            edit={jest.fn}
+            remove={jest.fn}
+        />
+    );
 
     getByDisplayValue(item.name);
 });
@@ -50,7 +57,7 @@ test("should call edit() upon submitting", () => {
     const item = buildItem({ id: "foo" });
 
     const { getByTestId, getByDisplayValue } = render(
-        <Edit items={[item]} edit={edit} remove={jest.fn} />
+        <Edit items={[item]} edit={edit} complete={jest.fn} remove={jest.fn} />
     );
 
     const input = getByDisplayValue(item.name) as HTMLInputElement;
@@ -68,7 +75,7 @@ test("should not call edit() if name doesn't change", () => {
     const item = buildItem({ id: "foo" });
 
     const { getByTestId } = render(
-        <Edit items={[item]} edit={edit} remove={jest.fn} />
+        <Edit items={[item]} edit={edit} complete={jest.fn} remove={jest.fn} />
     );
 
     fireEvent.submit(getByTestId("form"));
@@ -80,7 +87,12 @@ test("should change Input value during typing", () => {
     const item = buildItem({ id: "foo" });
 
     const { getByDisplayValue } = render(
-        <Edit items={[item]} edit={jest.fn} remove={jest.fn} />
+        <Edit
+            items={[item]}
+            edit={jest.fn}
+            complete={jest.fn}
+            remove={jest.fn}
+        />
     );
 
     const input = getByDisplayValue(item.name) as HTMLInputElement;
@@ -96,7 +108,12 @@ test("should remove if clicking upon remove button and confirm", async () => {
     (swal as jest.Mock).mockResolvedValueOnce(true);
 
     const { getByTestId } = render(
-        <Edit items={[item]} edit={jest.fn} remove={remove} />
+        <Edit
+            items={[item]}
+            edit={jest.fn}
+            complete={jest.fn}
+            remove={remove}
+        />
     );
 
     const button = getByTestId("remove");
@@ -114,7 +131,12 @@ test("should redirect to homepage after remove", () => {
     (swal as jest.Mock).mockResolvedValueOnce(true);
 
     const { getByTestId } = render(
-        <Edit items={[item]} edit={jest.fn} remove={jest.fn} />
+        <Edit
+            items={[item]}
+            edit={jest.fn}
+            complete={jest.fn}
+            remove={jest.fn}
+        />
     );
 
     const button = getByTestId("remove");

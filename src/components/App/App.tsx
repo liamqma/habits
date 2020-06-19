@@ -18,6 +18,7 @@ function App(): JSX.Element {
         add,
         edit,
         remove,
+        complete,
         done,
         unDone,
         isLoading,
@@ -62,7 +63,12 @@ function App(): JSX.Element {
                             <Add add={add} />
                         </Route>
                         <Route path="/edit/:id">
-                            <Edit edit={edit} remove={remove} items={items} />
+                            <Edit
+                                edit={edit}
+                                remove={remove}
+                                items={items}
+                                complete={complete}
+                            />
                         </Route>
                         <Route path="/login">
                             <Login user={user} />

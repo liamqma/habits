@@ -9,6 +9,7 @@ interface DBState {
     items: Array<Item>;
     add: Function;
     edit: Function;
+    complete: Function;
     remove: Function;
     done: Function;
     unDone: Function;
@@ -68,6 +69,19 @@ export default function useDB(user: User | null): DBState {
                     setError(error);
                 });
         }
+    }
+
+    function complete(id: string): void {
+        setItems(store.remove(items, id));
+        setIsLoading(true);
+        db.complete(id)
+            .then(() => {
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                setError(error);
+            });
     }
 
     function remove(id: string): void {
@@ -131,6 +145,7 @@ export default function useDB(user: User | null): DBState {
         items,
         add,
         edit,
+        complete,
         remove,
         done,
         unDone,

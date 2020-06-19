@@ -1,11 +1,12 @@
 import firebase from "../utils/firebase";
-import { Item } from "../types";
+import { Item, Status } from "../types";
 
 export function getAll(uid: string): Promise<Array<Item>> {
     return firebase
         .firestore()
         .collection("habits")
         .where("uid", "==", uid)
+        .where("status", "==", Status.active)
         .orderBy("created", "desc")
         .get()
         .then((querySnapshot) => {
@@ -36,6 +37,7 @@ export function add(uid: string, name: string): Promise<Item> {
             name,
             doneDates: [],
             created: firebase.firestore.Timestamp.now(),
+            status: Status.active,
         })
         .then(function (docRef) {
             return {
@@ -51,6 +53,15 @@ export function update(id: string, name: string): Promise<void> {
     return firebase.firestore().collection("habits").doc(id).set(
         {
             name,
+        },
+        { merge: true }
+    );
+}
+
+export function complete(id: string): Promise<void> {
+    return firebase.firestore().collection("habits").doc(id).set(
+        {
+            status: Status.complete,
         },
         { merge: true }
     );

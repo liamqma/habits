@@ -4,8 +4,7 @@ export interface Item {
     doneDates: Date[];
 }
 
-export interface DBItem {
-    id: string;
-    name: string;
-    doneDates: string[];
+export enum Status {
+    active = "active",
+    complete = "complete",
 }

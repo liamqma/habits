@@ -13,16 +13,14 @@ const Wrapper = styled.div`
 `;
 
 const Button = styled.button`
-    width: 200px;
     color: #fff;
     padding: 15px 15px 15px 35px;
     border-radius: 5px;
-    background-color: #de4e3b;
     font-weight: 600;
     position: relative;
     display: block;
     margin: 10px auto;
-    min-width: 180px;
+    min-width: 200px;
 
     svg {
         position: absolute;
