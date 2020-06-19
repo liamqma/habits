@@ -1,19 +1,19 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { FaGoogle } from "react-icons/fa";
-import { GiCloakDagger } from "react-icons/gi";
+import { FaGoogle, FaUserCircle } from "react-icons/fa";
 import { User } from "firebase";
 import { Redirect } from "react-router-dom";
 import firebase from "../../utils/firebase";
 
-const provider = new firebase.auth.GoogleAuthProvider();
+const GoogleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
 const Wrapper = styled.div`
     padding: 5px;
 `;
 
 const Button = styled.button`
+    width: 200px;
     color: #fff;
     padding: 15px 15px 15px 35px;
     border-radius: 5px;
@@ -49,7 +49,7 @@ function Login({ user }: Props): JSX.Element {
     function onGoogleButtonClick(): void {
         firebase
             .auth()
-            .signInWithPopup(provider)
+            .signInWithPopup(GoogleAuthProvider)
             .then(function () {
                 history.push("/");
             });
@@ -72,7 +72,7 @@ function Login({ user }: Props): JSX.Element {
                 <FaGoogle /> Sign in with Google
             </GoogleSocialButton>
             <AnonymousButton onClick={onAnonymousButtonClick}>
-                <GiCloakDagger /> Sign in Anonymously
+                <FaUserCircle /> Sign in Anonymously
             </AnonymousButton>
         </Wrapper>
     );

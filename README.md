@@ -39,7 +39,6 @@ $ npm start
 -   ~~Github calendar contribution~~
 -   ~~Congrate if all done~~
 -   ~~Modal window~~
--   Facebook login provider
 -   ~~Better 'add' and 'update' buttons~~
 -   ~~Use it without login~~
 -   About: why the project exists
