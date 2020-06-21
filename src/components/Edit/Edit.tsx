@@ -76,6 +76,7 @@ function Edit({ edit, remove, complete, items }: Props): JSX.Element {
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this habit!",
             icon: "warning",
+            buttons: ["Cancel", "I am sure!"],
             dangerMode: true,
         }).then((confirmDelete) => {
             if (confirmDelete) {
@@ -89,6 +90,7 @@ function Edit({ edit, remove, complete, items }: Props): JSX.Element {
         swal({
             title: "Do you want to complete this habit?",
             icon: "info",
+            buttons: ["Cancel", "Yes, please!"],
         }).then((confirmComplete) => {
             if (confirmComplete) {
                 complete(id);
