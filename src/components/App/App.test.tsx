@@ -6,6 +6,7 @@ import {
     add,
     update,
     remove,
+    complete,
     addDoneDate,
     removeDoneDate,
 } from "../../repository/firestore";
@@ -27,6 +28,16 @@ jest.mock("../Loading/Loading");
 
 jest.mock("../Summary/Summary");
 
+beforeAll(() => {
+    (useAuth as jest.Mock).mockReturnValue({
+        user: mockedUser,
+    });
+});
+
+afterAll(() => {
+    (useAuth as jest.Mock).mockRestore();
+});
+
 afterEach(() => {
     (getAll as jest.Mock).mockReset();
     (swal as jest.Mock).mockReset();
@@ -38,13 +49,12 @@ interface CustomRenderResult extends RenderResult {
 
 function renderApp(options?: { item?: Item }): CustomRenderResult {
     const item = options?.item || buildItem();
-    (useAuth as jest.Mock).mockReturnValue({
-        user: mockedUser,
-    });
+
     (getAll as jest.Mock).mockResolvedValueOnce([item]);
     (removeDoneDate as jest.Mock).mockResolvedValueOnce(null);
     (addDoneDate as jest.Mock).mockResolvedValueOnce(null);
     (remove as jest.Mock).mockResolvedValueOnce(null);
+    (complete as jest.Mock).mockResolvedValueOnce(null);
     (update as jest.Mock).mockResolvedValueOnce(null);
 
     const utils = render(<App />);
@@ -108,6 +118,41 @@ test("clicking on item should add done date if today is not done", async () => {
     expect(swal).toBeCalledTimes(1);
 });
 
+test("complete item", async () => {
+    (swal as jest.Mock).mockResolvedValueOnce(true);
+
+    const {
+        getByDisplayValue,
+        queryByText,
+        container,
+        getByTestId,
+        item,
+    } = renderApp();
+
+    await wait();
+
+    const link = container.querySelector(`[href="/edit/${item.id}"]`);
+    if (link === null) {
+        throw new Error(`unable to find the link "/edit/${item.id}"`);
+    }
+    userEvent.click(link);
+
+    await wait(() => {
+        getByDisplayValue(item.name);
+    });
+
+    userEvent.click(getByTestId("complete"));
+
+    await wait();
+
+    expect(swal).toBeCalledTimes(1);
+    expect(complete).toBeCalledWith(item.id);
+    expect(complete).toBeCalledTimes(1);
+
+    await wait();
+    expect(queryByText(item.name)).not.toBeInTheDocument();
+});
+
 test("delete item", async () => {
     (swal as jest.Mock).mockResolvedValueOnce(true);
 
@@ -135,6 +180,7 @@ test("delete item", async () => {
 
     await wait();
 
+    expect(swal).toBeCalledTimes(1);
     expect(remove).toBeCalledWith(item.id);
     expect(remove).toBeCalledTimes(1);
 

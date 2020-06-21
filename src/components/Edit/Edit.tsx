@@ -124,7 +124,7 @@ function Edit({ edit, remove, complete, items }: Props): JSX.Element {
                 />
                 {name && <SubmitButton type="submit" value="Update" />}
             </Form>
-            <CompleteButton onClick={confirmComplete}>
+            <CompleteButton onClick={confirmComplete} data-testid="complete">
                 <FaThumbsUp /> Complete
             </CompleteButton>
             <RemoveButton onClick={confirmRemove} data-testid="remove">
