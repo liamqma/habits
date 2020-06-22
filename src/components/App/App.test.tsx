@@ -26,7 +26,7 @@ jest.mock("../../hooks/use-auth");
 
 jest.mock("../Loading/Loading");
 
-jest.mock("../Summary/Summary");
+jest.mock("../Home/Summary");
 
 beforeAll(() => {
     (useAuth as jest.Mock).mockReturnValue({

@@ -2,8 +2,8 @@ import React from "react";
 import { User } from "firebase";
 import { Redirect } from "react-router-dom";
 import Add from "../Add/index";
-import List from "../List/index";
-import Summary from "../Summary/Summary";
+import List from "./List";
+import Summary from "./Summary";
 import { Item } from "../../types";
 
 interface Props {

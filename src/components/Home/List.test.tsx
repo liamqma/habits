@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import List from "./index";
+import List from "./List";
 import { buildItem } from "../../../test/utils/generate";
 import { isDoneToday } from "../../utils/today";
 
