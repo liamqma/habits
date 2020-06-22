@@ -1,15 +1,15 @@
-import { Item } from "../types";
+import { Item, Status } from "../types";
 
 export function update(
     items: Array<Item>,
     id: string,
-    name: string
+    update: { name?: string; status?: Status.active | Status.complete }
 ): Array<Item> {
     return [...items].map((item) => {
         if (item.id === id) {
             return {
                 ...item,
-                name,
+                ...update,
             };
         }
         return item;

@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import Add from "../Add/index";
 import List from "./List";
 import Summary from "./Summary";
-import { Item } from "../../types";
+import { Item, Status } from "../../types";
 
 interface Props {
     items: Array<Item>;
@@ -15,11 +15,12 @@ interface Props {
 }
 
 function Home({ user, items, add, done, unDone }: Props): JSX.Element {
+    const activeItems = items.filter((item) => item.status === Status.active);
     return user ? (
         <>
             <Add add={add} />
-            <List items={items} done={done} unDone={unDone} />
-            <Summary items={items} />
+            <List items={activeItems} done={done} unDone={unDone} />
+            <Summary items={activeItems} />
         </>
     ) : (
         <Redirect to="/login" />

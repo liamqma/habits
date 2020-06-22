@@ -1,5 +1,5 @@
 import faker from "faker";
-import { Item } from "../../src/types";
+import { Item, Status } from "../../src/types";
 
 const getItemName = (): string =>
     `${faker.hacker.verb()} ${faker.hacker.noun()}`;
@@ -16,6 +16,7 @@ export function buildItem(overrides?: Overrides): Item {
         id: getId(),
         name: getItemName(),
         doneDates: [],
+        status: Status.active,
         ...overrides,
     };
 }

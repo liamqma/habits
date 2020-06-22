@@ -5,7 +5,7 @@ import { FaEdit } from "react-icons/fa";
 import { Item } from "../../types";
 import { isDoneToday } from "../../utils/today";
 
-const LinkButton = styled(Link)`
+export const LinkButton = styled(Link)`
     position: absolute;
     top: 0;
     right: 10px;
@@ -16,7 +16,7 @@ const LinkButton = styled(Link)`
     color: #cc9a9a;
 `;
 
-const ItemList = styled.ul`
+export const ItemList = styled.ul`
     margin: 0;
     padding: 0;
     list-style: none;

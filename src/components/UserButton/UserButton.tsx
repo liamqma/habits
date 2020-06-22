@@ -5,7 +5,7 @@ import { User } from "firebase";
 import { useHistory } from "react-router-dom";
 import firebase from "../../utils/firebase";
 
-export const UserLink = styled(Link)`
+export const UserLinks = styled.div`
     position: absolute;
     top: 10px;
     right: 10px;
@@ -28,11 +28,16 @@ export default function App({ user }: Props): JSX.Element {
             });
     }
 
-    return user ? (
-        <UserLink to="/" onClick={logout}>
-            Logout
-        </UserLink>
+    const Inner = user ? (
+        <>
+            <Link to="/" onClick={logout}>
+                Logout
+            </Link>{" "}
+            | <Link to="/complete">Complete</Link>
+        </>
     ) : (
-        <UserLink to="/login">Login</UserLink>
+        <Link to="/login">Login</Link>
     );
+
+    return <UserLinks>{Inner}</UserLinks>;
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import swal from "sweetalert";
 import Home from "../Home/index";
+import Complete from "../Complete/index";
 import Add from "../Add/index";
 import Edit from "../Edit/index";
 import Login from "../Login/index";
@@ -72,6 +73,9 @@ function App(): JSX.Element {
                         </Route>
                         <Route path="/login">
                             <Login user={user} />
+                        </Route>
+                        <Route path="/complete">
+                            <Complete user={user} items={items} />
                         </Route>
                         <Route path="/">
                             <Home

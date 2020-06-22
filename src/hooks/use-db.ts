@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { User } from "firebase";
 import * as db from "../repository/firestore";
 import * as store from "../repository/inMemory";
-import { Item } from "../types";
+import { Item, Status } from "../types";
 import { isDoneToday, isTodayAllDone } from "../utils/today";
 
 interface DBState {
@@ -58,7 +58,7 @@ export default function useDB(user: User | null): DBState {
 
     function edit(id: string, name: string): void {
         if (name) {
-            setItems(store.update(items, id, name));
+            setItems(store.update(items, id, { name }));
             setIsLoading(true);
             db.update(id, name)
                 .then(() => {
@@ -72,7 +72,7 @@ export default function useDB(user: User | null): DBState {
     }
 
     function complete(id: string): void {
-        setItems(store.remove(items, id));
+        setItems(store.update(items, id, { status: Status.complete }));
         setIsLoading(true);
         db.complete(id)
             .then(() => {

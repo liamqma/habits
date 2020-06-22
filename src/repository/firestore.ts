@@ -6,7 +6,6 @@ export function getAll(uid: string): Promise<Array<Item>> {
         .firestore()
         .collection("habits")
         .where("uid", "==", uid)
-        .where("status", "==", Status.active)
         .orderBy("created", "desc")
         .get()
         .then((querySnapshot) => {
@@ -16,6 +15,7 @@ export function getAll(uid: string): Promise<Array<Item>> {
                 items.push({
                     id: document.id,
                     name: data.name,
+                    status: data.status,
                     doneDates:
                         data.doneDates?.map(
                             (doneDate: firebase.firestore.Timestamp) => {
@@ -44,6 +44,7 @@ export function add(uid: string, name: string): Promise<Item> {
                 id: docRef.id,
                 uid,
                 name,
+                status: Status.active,
                 doneDates: [],
             };
         });
