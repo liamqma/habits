@@ -9,6 +9,7 @@ export interface Overrides {
     id?: string;
     name?: string;
     doneDates?: Date[];
+    status?: Status.active | Status.complete;
 }
 
 export function buildItem(overrides?: Overrides): Item {

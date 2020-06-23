@@ -14,7 +14,7 @@ import swal from "sweetalert";
 import useAuth from "../../hooks/use-auth";
 import App from "./App";
 import { buildItem } from "../../../test/utils/generate";
-import { Item } from "../../types";
+import { Item, Status } from "../../types";
 
 const mockedUser = {
     uid: "User A",
@@ -45,12 +45,21 @@ afterEach(() => {
 
 interface CustomRenderResult extends RenderResult {
     item: Item;
+    items: Array<Item>;
 }
 
-function renderApp(options?: { item?: Item }): CustomRenderResult {
-    const item = options?.item || buildItem();
+function renderApp(options?: {
+    item?: Item;
+    items?: Array<Item>;
+}): CustomRenderResult {
+    let items = [];
+    if (options?.items && options?.items.length) {
+        items = options.items || [];
+    } else {
+        items = [options?.item || buildItem()];
+    }
 
-    (getAll as jest.Mock).mockResolvedValueOnce([item]);
+    (getAll as jest.Mock).mockResolvedValueOnce([...items]);
     (removeDoneDate as jest.Mock).mockResolvedValueOnce(null);
     (addDoneDate as jest.Mock).mockResolvedValueOnce(null);
     (remove as jest.Mock).mockResolvedValueOnce(null);
@@ -60,7 +69,8 @@ function renderApp(options?: { item?: Item }): CustomRenderResult {
     const utils = render(<App />);
     return {
         ...utils,
-        item,
+        item: items[0],
+        items,
     };
 }
 
@@ -98,18 +108,20 @@ test("clicking on item should remove done date if today is done", async () => {
     expect(getByTestId(`${item.id}-dates`).textContent).toBe("0");
 });
 
-test("clicking on item should add done date if today is not done", async () => {
-    const { getAllByText, getByTestId, item } = renderApp();
+test.only("clicking on item should add done date if today is not done", async () => {
+    const { getAllByText, getByTestId, items } = renderApp({
+        items: [buildItem(), buildItem({ status: Status.complete })],
+    });
 
     await wait();
 
-    userEvent.click(getAllByText(item.name)[0]);
+    userEvent.click(getAllByText(items[0].name)[0]);
 
-    expect(addDoneDate).toBeCalledWith(item.id);
+    expect(addDoneDate).toBeCalledWith(items[0].id);
     expect(addDoneDate).toBeCalledTimes(1);
 
     await wait();
-    expect(getByTestId(`${item.id}-dates`).textContent).toBe("1");
+    expect(getByTestId(`${items[0].id}-dates`).textContent).toBe("1");
 
     // Expect the congrats message
     expect(swal).toBeCalledWith(

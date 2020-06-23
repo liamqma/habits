@@ -1,4 +1,4 @@
-import { Item } from "../types";
+import { Item, Status } from "../types";
 
 export function isToday(someDate: Date): boolean {
     const today = new Date();
@@ -16,8 +16,10 @@ export function isDoneToday(item: Item): boolean {
     return false;
 }
 
-export function isTodayAllDone(items: Array<Item>): boolean {
-    if (items.length === 0) return false;
+export function isTodayAllDone(allItems: Array<Item>): boolean {
+    if (allItems.length === 0) return false;
+    const items = allItems.filter((item) => item.status === Status.active);
+
     for (let i = 0; i < items.length; i++) {
         if (!isDoneToday(items[i])) {
             return false;
