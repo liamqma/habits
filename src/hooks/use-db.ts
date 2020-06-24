@@ -10,6 +10,7 @@ interface DBState {
     add: Function;
     edit: Function;
     complete: Function;
+    incomplete: Function;
     remove: Function;
     done: Function;
     unDone: Function;
@@ -84,6 +85,19 @@ export default function useDB(user: User | null): DBState {
             });
     }
 
+    function incomplete(id: string): void {
+        setItems(store.update(items, id, { status: Status.active }));
+        setIsLoading(true);
+        db.incomplete(id)
+            .then(() => {
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                setError(error);
+            });
+    }
+
     function remove(id: string): void {
         setItems(store.remove(items, id));
         setIsLoading(true);
@@ -146,6 +160,7 @@ export default function useDB(user: User | null): DBState {
         add,
         edit,
         complete,
+        incomplete,
         remove,
         done,
         unDone,

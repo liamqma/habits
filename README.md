@@ -43,5 +43,5 @@ $ npm start
 -   ~~Use it without login~~
 -   About: why the project exists
 -   Instructions
--   Complete a goal
+-   ~Complete a goal~
 -   Add browser support to README

@@ -68,6 +68,15 @@ export function complete(id: string): Promise<void> {
     );
 }
 
+export function incomplete(id: string): Promise<void> {
+    return firebase.firestore().collection("habits").doc(id).set(
+        {
+            status: Status.active,
+        },
+        { merge: true }
+    );
+}
+
 export function remove(id: string): Promise<void> {
     return firebase.firestore().collection("habits").doc(id).delete();
 }

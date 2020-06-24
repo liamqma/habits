@@ -20,6 +20,7 @@ function App(): JSX.Element {
         edit,
         remove,
         complete,
+        incomplete,
         done,
         unDone,
         isLoading,
@@ -69,6 +70,7 @@ function App(): JSX.Element {
                                 remove={remove}
                                 items={items}
                                 complete={complete}
+                                incomplete={incomplete}
                             />
                         </Route>
                         <Route path="/login">

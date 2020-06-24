@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { FaThumbsUp, FaTrash } from "react-icons/fa";
+import { FaThumbsUp, FaTrash, FaPlay } from "react-icons/fa";
 import Calendar from "./Calendar";
 import swal from "sweetalert";
 import { Input, SubmitButton } from "../Add/index";
-import { Item } from "../../types";
+import { Item, Status } from "../../types";
 
 const Form = styled.form`
     position: relative;
@@ -27,6 +27,7 @@ const Button = styled.button`
     display: block;
     margin: 10px auto;
     min-width: 115px;
+    cursor: pointer;
 
     svg {
         position: absolute;
@@ -47,10 +48,17 @@ interface Props {
     edit: Function;
     remove: Function;
     complete: Function;
+    incomplete: Function;
     items: Array<Item>;
 }
 
-function Edit({ edit, remove, complete, items }: Props): JSX.Element {
+function Edit({
+    edit,
+    remove,
+    complete,
+    incomplete,
+    items,
+}: Props): JSX.Element {
     const { id } = useParams();
     const item = items.find((item) => item.id === id);
     const [name, setName] = useState("");
@@ -78,8 +86,8 @@ function Edit({ edit, remove, complete, items }: Props): JSX.Element {
             icon: "warning",
             buttons: ["Cancel", "I am sure!"],
             dangerMode: true,
-        }).then((confirmDelete) => {
-            if (confirmDelete) {
+        }).then((confirm) => {
+            if (confirm) {
                 remove(id);
                 history.push("/");
             }
@@ -91,9 +99,22 @@ function Edit({ edit, remove, complete, items }: Props): JSX.Element {
             title: "Do you want to complete this habit?",
             icon: "info",
             buttons: ["Cancel", "Yes, please!"],
-        }).then((confirmComplete) => {
-            if (confirmComplete) {
+        }).then((confirm) => {
+            if (confirm) {
                 complete(id);
+                history.push("/");
+            }
+        });
+    }
+
+    function confirmIncomplete(): void {
+        swal({
+            title: "Do you want to activate this habit?",
+            icon: "info",
+            buttons: ["Cancel", "Yes, please!"],
+        }).then((confirm) => {
+            if (confirm) {
+                incomplete(id);
                 history.push("/");
             }
         });
@@ -124,9 +145,21 @@ function Edit({ edit, remove, complete, items }: Props): JSX.Element {
                 />
                 {name && <SubmitButton type="submit" value="Update" />}
             </Form>
-            <CompleteButton onClick={confirmComplete} data-testid="complete">
-                <FaThumbsUp /> Complete
-            </CompleteButton>
+            {item.status === Status.active ? (
+                <CompleteButton
+                    onClick={confirmComplete}
+                    data-testid="complete"
+                >
+                    <FaThumbsUp /> Complete
+                </CompleteButton>
+            ) : (
+                <CompleteButton
+                    onClick={confirmIncomplete}
+                    data-testid="incomplete"
+                >
+                    <FaPlay /> Activate
+                </CompleteButton>
+            )}
             <RemoveButton onClick={confirmRemove} data-testid="remove">
                 <FaTrash /> Delete
             </RemoveButton>

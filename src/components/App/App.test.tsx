@@ -7,6 +7,7 @@ import {
     update,
     remove,
     complete,
+    incomplete,
     addDoneDate,
     removeDoneDate,
 } from "../../repository/firestore";
@@ -64,6 +65,7 @@ function renderApp(options?: {
     (addDoneDate as jest.Mock).mockResolvedValueOnce(null);
     (remove as jest.Mock).mockResolvedValueOnce(null);
     (complete as jest.Mock).mockResolvedValueOnce(null);
+    (incomplete as jest.Mock).mockResolvedValueOnce(null);
     (update as jest.Mock).mockResolvedValueOnce(null);
 
     const utils = render(<App />);
@@ -108,7 +110,7 @@ test("clicking on item should remove done date if today is done", async () => {
     expect(getByTestId(`${item.id}-dates`).textContent).toBe("0");
 });
 
-test.only("clicking on item should add done date if today is not done", async () => {
+test("clicking on item should add done date if today is not done", async () => {
     const { getAllByText, getByTestId, items } = renderApp({
         items: [buildItem(), buildItem({ status: Status.complete })],
     });
@@ -128,6 +130,49 @@ test.only("clicking on item should add done date if today is not done", async ()
         expect.objectContaining({ title: expect.any(String), icon: "success" })
     );
     expect(swal).toBeCalledTimes(1);
+});
+
+test("incomplete item", async () => {
+    (swal as jest.Mock).mockResolvedValueOnce(true);
+
+    const {
+        container,
+        getByTestId,
+        getAllByText,
+        getByText,
+        item,
+    } = renderApp({ item: buildItem({ status: Status.complete }) });
+
+    await wait();
+
+    const completeLink = container.querySelector(`[href="/complete"]`);
+    if (completeLink === null) {
+        throw new Error(`unable to find the link "/complete"`);
+    }
+    userEvent.click(completeLink);
+
+    await wait(() => {
+        getByText(item.name);
+    });
+
+    const itemLink = container.querySelector(`[href="/edit/${item.id}"]`);
+    if (itemLink === null) {
+        throw new Error(`unable to find the link "/edit/${item.id}"`);
+    }
+    userEvent.click(itemLink);
+
+    await wait();
+
+    userEvent.click(getByTestId("incomplete"));
+
+    await wait();
+
+    expect(swal).toBeCalledTimes(1);
+    expect(incomplete).toBeCalledWith(item.id);
+    expect(incomplete).toBeCalledTimes(1);
+
+    await wait();
+    getAllByText(item.name);
 });
 
 test("complete item", async () => {
