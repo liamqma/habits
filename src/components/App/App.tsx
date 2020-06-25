@@ -4,6 +4,7 @@ import swal from "sweetalert";
 import Home from "../Home/index";
 import Complete from "../Complete/index";
 import Add from "../Add/index";
+import About from "../About/About";
 import Edit from "../Edit/index";
 import Login from "../Login/index";
 import UserButton from "../UserButton/index";
@@ -78,6 +79,9 @@ function App(): JSX.Element {
                         </Route>
                         <Route path="/complete">
                             <Complete user={user} items={items} />
+                        </Route>
+                        <Route path="/about">
+                            <About />
                         </Route>
                         <Route path="/">
                             <Home
