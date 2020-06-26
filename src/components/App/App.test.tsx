@@ -305,7 +305,7 @@ test("login and render list, add item, update item", async () => {
     const { getByText, rerender, getAllByText } = render(<App />);
 
     // should show sign in page
-    getByText(/sign in with/i);
+    getByText(/click here/i);
 
     (useAuth as jest.Mock).mockReturnValueOnce({
         user: mockedUser,

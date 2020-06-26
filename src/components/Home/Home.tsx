@@ -1,7 +1,7 @@
 import React from "react";
 import { User } from "firebase";
-import { Redirect } from "react-router-dom";
 import Add from "../Add/index";
+import About from "../About/About";
 import List from "./List";
 import Summary from "./Summary";
 import { Item, Status } from "../../types";
@@ -23,7 +23,7 @@ function Home({ user, items, add, done, unDone }: Props): JSX.Element {
             <Summary items={activeItems} />
         </>
     ) : (
-        <Redirect to="/login" />
+        <About />
     );
 }
 
