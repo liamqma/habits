@@ -11,7 +11,7 @@ const Form = styled.form`
     position: relative;
 `;
 
-const NotFoundWrapper = styled.div`
+export const NotFoundWrapper = styled.div`
     padding: 15px 15px 15px 50px;
     width: 100%;
     font-size: 24px;

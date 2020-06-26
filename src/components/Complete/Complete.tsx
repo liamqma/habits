@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import styled from "styled-components";
 import { LinkButton, ItemList } from "../Home/List";
+import { NotFoundWrapper } from "../Edit/Edit";
 import { Item, Status } from "../../types";
 
 const CustomItemList = styled(ItemList)`
@@ -30,7 +31,11 @@ function Complete({ user, items }: Props): JSX.Element | null {
     }
 
     if (completeItems.length === 0) {
-        return null;
+        return (
+            <NotFoundWrapper>
+                You do not have any completed habits.
+            </NotFoundWrapper>
+        );
     }
 
     return (
