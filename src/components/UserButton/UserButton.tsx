@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { User } from "firebase";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import firebase from "../../utils/firebase";
 
 export const UserLinks = styled.div`
@@ -17,6 +17,7 @@ interface Props {
 
 export default function App({ user }: Props): JSX.Element {
     const history = useHistory();
+    const location = useLocation();
 
     function logout(event: React.MouseEvent): void {
         event.preventDefault();
@@ -33,7 +34,11 @@ export default function App({ user }: Props): JSX.Element {
             <Link to="/" onClick={logout}>
                 Logout
             </Link>{" "}
-            | <Link to="/complete">Complete</Link>
+            {location.pathname !== "/complete" && (
+                <>
+                    | <Link to="/complete">Complete</Link>
+                </>
+            )}
         </>
     ) : (
         <Link to="/login">Login</Link>
